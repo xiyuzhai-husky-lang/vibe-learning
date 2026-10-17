@@ -1,16 +1,18 @@
-# 练习形式(推演)
+# Exercise formats (working notes)
 
-> 这是从 [thesis.md](thesis.md) "读代码、判断代码" 一节推出的练习设计想法,尚未定案。
+> Exercise design ideas derived from the "read and judge code" section of [thesis.md](thesis.md). Not settled.
 
-## 原则
+## Principles
 
-- 练习形式是"审查/判断",不是"写代码"。学习者是审查者,AI 是作者。
-- 单纯问"这段 Go 代码对不对"会退化成技术测验。题目要考察意图对齐与控制判断。
-- 学习者必须给出结论和理由,并看到判断错误的后果,避免退化成被动选择题。批准了一个微妙偏离需求的改动,就应该看到它上线后发生了什么。
+- The exercise is a review or a judgment, never writing code. The learner is the reviewer; the AI is the author.
+- Asking merely "is this Go code correct" degenerates into a technical quiz. Lessons test alignment with intent and control.
+- Only valid programs that run; the question asks in natural language what the code actually does. Never test language trivia that an AI or a compiler cannot get wrong.
+- Choices are one-line conclusions without argument; the explanation appears once, after the answer.
+- The learner should state a conclusion and a reason, and see the consequence of a wrong judgment, so the format does not degenerate into passive multiple choice. Approving a change that quietly deviates from the ticket should show what happened after it shipped.
 
-## 题型草案
+## Draft formats
 
-- 给出需求和两个都通过 CI 的 PR。哪个该合并?另一个对需求理解错在哪?
-- 这个改动正确且写得很好。它该存在吗?
-- AI 自信地解释了它的改动。找出解释里 diff 并不支持的那句话。
-- 给出 diff 和它的测试。作者默默接受了哪种行为而没有说明?
+- Given a ticket and two PRs that both pass CI. Which one should merge, and where did the other misread the ticket?
+- This change is correct and well written. Should it exist?
+- The AI explains its change confidently. Find the sentence the diff does not support.
+- Given a diff and its tests. Which behavior did the author silently accept without saying so?

@@ -1,9 +1,9 @@
-# 成年学习者与学生的区别(推演)
+# How adult learners differ from students (working notes)
 
-> 这是从 [thesis.md](thesis.md) "面向成年人" 一节推出的产品含义,尚未定案。
+> Product implications derived from the "for adults" section of [thesis.md](thesis.md). Not settled.
 
-成年学习者和学生有三个根本不同:
+Adult learners differ from students in three fundamental ways:
 
-1. **他们已经有一门母语。** Rust 开发者学 Go 不需要从"什么是变量"开始,需要的是"Go 在哪些地方和我的直觉冲突"。题目可以按"你已会 X,现在学 Y"来组织,专门挑两门语言判断标准不同的地方出题。
-2. **他们没有时间,也没有耐心。** 每道题必须在几分钟内完成,并且每道题都要有明确的"学到了什么"。
-3. **他们有自己的工作场景。** AI 算法工程师想学的软件实践,最好直接用他们熟悉的训练脚本、数据流水线来出题,而不是抽象的 todo-list 应用。
+1. **They already have a first language.** A Rust developer learning Go does not need "what is a variable"; they need "where does Go clash with my intuition". Lessons can be organized as "you know X, now learn Y", picking exactly the places where the two languages judge things differently.
+2. **They have no time and no patience.** Every lesson must finish within minutes, and every lesson must have a clear "what I learned".
+3. **They have their own work context.** An AI algorithm engineer learning software practice should see training scripts and data pipelines they recognize, not an abstract todo-list app.

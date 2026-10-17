@@ -34,3 +34,7 @@ go.work.sum
 
 # Local agent instructions
 CLAUDE.md
+
+# Node / frontend
+node_modules/
+src/prototypes/*/web/dist/
