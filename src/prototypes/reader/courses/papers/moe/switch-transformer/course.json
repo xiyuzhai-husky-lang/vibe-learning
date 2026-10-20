@@ -1,0 +1,12 @@
+{
+  "id": "switch-transformer",
+  "title": "Switch Transformer",
+  "tagline": "Route each token to one expert.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2101.03961",
+  "related": [
+    "gshard",
+    "mixtral"
+  ],
+  "kinds": []
+}

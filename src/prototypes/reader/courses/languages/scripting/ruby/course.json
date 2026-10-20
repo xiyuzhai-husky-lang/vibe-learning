@@ -1,0 +1,11 @@
+{
+  "id": "ruby",
+  "title": "Ruby",
+  "tagline": "Every Ruby feature, one snippet at a time.",
+  "language": "ruby",
+  "related": [
+    "python",
+    "elixir"
+  ],
+  "kinds": []
+}

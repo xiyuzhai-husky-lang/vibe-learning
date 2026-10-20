@@ -1,0 +1,11 @@
+{
+  "id": "matlab",
+  "title": "MATLAB",
+  "tagline": "Every MATLAB feature, one snippet at a time.",
+  "language": "matlab",
+  "related": [
+    "julia",
+    "r"
+  ],
+  "kinds": []
+}

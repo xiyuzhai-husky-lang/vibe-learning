@@ -1,0 +1,11 @@
+{
+  "id": "php",
+  "title": "PHP",
+  "tagline": "Every PHP feature, one snippet at a time.",
+  "language": "php",
+  "related": [
+    "javascript",
+    "ruby"
+  ],
+  "kinds": []
+}

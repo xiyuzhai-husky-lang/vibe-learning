@@ -1,0 +1,11 @@
+{
+  "id": "zig",
+  "title": "Zig",
+  "tagline": "Every Zig feature, one snippet at a time.",
+  "language": "zig",
+  "related": [
+    "c",
+    "rust"
+  ],
+  "kinds": []
+}

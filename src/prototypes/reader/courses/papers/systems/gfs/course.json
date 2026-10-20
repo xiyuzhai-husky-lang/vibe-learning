@@ -1,0 +1,12 @@
+{
+  "id": "gfs",
+  "title": "The Google File System",
+  "tagline": "A file system built for failure and append.",
+  "language": "text",
+  "source": "https://research.google/pubs/pub51/",
+  "related": [
+    "mapreduce",
+    "bigtable"
+  ],
+  "kinds": []
+}

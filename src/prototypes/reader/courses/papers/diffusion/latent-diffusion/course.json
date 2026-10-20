@@ -1,0 +1,11 @@
+{
+  "id": "latent-diffusion",
+  "title": "Latent diffusion",
+  "tagline": "Diffuse in a compressed latent space.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2112.10752",
+  "related": [
+    "ddpm"
+  ],
+  "kinds": []
+}

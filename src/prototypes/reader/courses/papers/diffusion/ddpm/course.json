@@ -1,0 +1,12 @@
+{
+  "id": "ddpm",
+  "title": "Denoising diffusion probabilistic models",
+  "tagline": "Generate by learning to reverse noise.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2006.11239",
+  "related": [
+    "latent-diffusion",
+    "flow-matching"
+  ],
+  "kinds": []
+}

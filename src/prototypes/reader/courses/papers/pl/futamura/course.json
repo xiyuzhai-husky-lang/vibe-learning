@@ -1,0 +1,11 @@
+{
+  "id": "futamura",
+  "title": "Partial evaluation and the Futamura projections",
+  "tagline": "Compilers from interpreters by specialization.",
+  "language": "text",
+  "source": "https://doi.org/10.1023/A:1010095604496",
+  "related": [
+    "damas-milner"
+  ],
+  "kinds": []
+}

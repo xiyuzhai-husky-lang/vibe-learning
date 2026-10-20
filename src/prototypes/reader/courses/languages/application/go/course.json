@@ -1,0 +1,53 @@
+{
+  "id": "go",
+  "title": "Go",
+  "tagline": "Every Go feature, one snippet at a time.",
+  "language": "go",
+  "kinds": [
+    {
+      "id": "declarations",
+      "label": "Declarations"
+    },
+    {
+      "id": "types",
+      "label": "Types"
+    },
+    {
+      "id": "functions",
+      "label": "Functions"
+    },
+    {
+      "id": "control",
+      "label": "Control flow"
+    },
+    {
+      "id": "collections",
+      "label": "Collections"
+    },
+    {
+      "id": "structs",
+      "label": "Structs"
+    },
+    {
+      "id": "interfaces",
+      "label": "Interfaces"
+    },
+    {
+      "id": "errors",
+      "label": "Errors"
+    },
+    {
+      "id": "concurrency",
+      "label": "Concurrency"
+    },
+    {
+      "id": "generics",
+      "label": "Generics"
+    }
+  ],
+  "related": [
+    "rust",
+    "java",
+    "go-toolchain"
+  ]
+}

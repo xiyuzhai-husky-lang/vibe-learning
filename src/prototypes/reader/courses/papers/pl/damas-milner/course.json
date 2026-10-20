@@ -1,0 +1,12 @@
+{
+  "id": "damas-milner",
+  "title": "Principal type-schemes for functional programs",
+  "tagline": "Type inference with let-polymorphism.",
+  "language": "text",
+  "source": "https://doi.org/10.1145/582153.582176",
+  "related": [
+    "ocaml",
+    "haskell"
+  ],
+  "kinds": []
+}

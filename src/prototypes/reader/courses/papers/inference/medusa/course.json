@@ -1,0 +1,12 @@
+{
+  "id": "medusa",
+  "title": "Medusa",
+  "tagline": "Extra decoding heads instead of a draft model.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2401.10774",
+  "related": [
+    "speculative-decoding",
+    "eagle"
+  ],
+  "kinds": []
+}

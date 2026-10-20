@@ -1,0 +1,12 @@
+{
+  "id": "lora",
+  "title": "LoRA",
+  "tagline": "Low-rank adapters instead of full fine-tuning.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2106.09685",
+  "related": [
+    "qlora",
+    "adam"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "ocaml",
+  "title": "OCaml",
+  "tagline": "Every OCaml feature, one snippet at a time.",
+  "language": "ocaml",
+  "related": [
+    "haskell",
+    "rust",
+    "fsharp",
+    "rocq"
+  ],
+  "kinds": []
+}

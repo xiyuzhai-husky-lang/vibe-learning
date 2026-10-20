@@ -1,0 +1,12 @@
+{
+  "id": "swift",
+  "title": "Swift",
+  "tagline": "Every Swift feature, one snippet at a time.",
+  "language": "swift",
+  "related": [
+    "kotlin",
+    "rust",
+    "metal"
+  ],
+  "kinds": []
+}

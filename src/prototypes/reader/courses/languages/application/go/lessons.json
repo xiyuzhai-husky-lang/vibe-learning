@@ -1,0 +1,1637 @@
+[
+  {
+    "id": "decl-package",
+    "kind": "declarations",
+    "title": "Package clause",
+    "code": "package orders\n\nimport \"fmt\"\n\nfunc Describe(n int) string {\n\treturn fmt.Sprintf(\"%d orders\", n)\n}",
+    "highlight": "package orders",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Declares a module named orders",
+      "Names the package this file belongs to",
+      "Imports a package named orders"
+    ],
+    "answer": 1,
+    "explanation": "Every .go file begins with a package clause; all files in a directory share one package, and there is no mod-style file tree."
+  },
+  {
+    "id": "decl-import",
+    "kind": "declarations",
+    "title": "Import",
+    "code": "package orders\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nfunc shout(s string) string {\n\treturn fmt.Sprint(strings.ToUpper(s))\n}",
+    "highlight": "import (\n\t\"fmt\"\n\t\"strings\"\n)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Brings two standard packages into scope",
+      "Re-exports fmt and strings to callers",
+      "Declares two modules in this directory"
+    ],
+    "answer": 0,
+    "explanation": "Imports are by path and used through the package name; an unused import is a compile error, not a warning."
+  },
+  {
+    "id": "decl-short-var",
+    "kind": "declarations",
+    "title": "Short variable declaration",
+    "code": "func main() {\n\tn := 42\n\tfmt.Println(n * 2)\n}",
+    "highlight": ":=",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Assigns to an existing variable",
+      "Declares a new variable",
+      "Compares the two sides for equality"
+    ],
+    "answer": 1,
+    "explanation": "Like let, but variables are mutable by default and there is no mut; := only works inside functions."
+  },
+  {
+    "id": "decl-var-zero",
+    "kind": "declarations",
+    "title": "var declaration",
+    "code": "func sum(nums []int) int {\n\tvar total int\n\tfor _, n := range nums {\n\t\ttotal += n\n\t}\n\treturn total\n}",
+    "highlight": "var total int",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Declares an immutable total",
+      "Declares total, initialized to 0",
+      "Declares total, must be assigned before use"
+    ],
+    "answer": 1,
+    "explanation": "Go has no uninitialized variables: every type has a zero value, 0 for numbers, \"\" for strings, nil for pointers."
+  },
+  {
+    "id": "decl-multi-assign",
+    "kind": "declarations",
+    "title": "Multiple assignment",
+    "code": "func swap(a, b int) (int, int) {\n\ta, b = b, a\n\treturn a, b\n}",
+    "highlight": "a, b = b, a",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Swaps the two values in one statement",
+      "Assigns b to both variables",
+      "Declares a tuple"
+    ],
+    "answer": 0,
+    "explanation": "The right side is evaluated fully before any assignment, so this is a swap without a temporary, like a destructuring assignment."
+  },
+  {
+    "id": "decl-const",
+    "kind": "declarations",
+    "title": "Constant",
+    "code": "const MaxRetries = 3\n\nfunc retry(f func() error) error {\n\tvar err error\n\tfor i := 0; i < MaxRetries; i++ {\n\t\tif err = f(); err == nil {\n\t\t\treturn nil\n\t\t}\n\t}\n\treturn err\n}",
+    "highlight": "const MaxRetries = 3",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A package-level variable, changeable at runtime",
+      "A constant visible only inside the function below",
+      "A compile-time constant with no written type"
+    ],
+    "answer": 2,
+    "explanation": "Constants may omit the type; an untyped constant takes whatever type the use site needs."
+  },
+  {
+    "id": "decl-iota",
+    "kind": "declarations",
+    "title": "iota",
+    "code": "type Level int\n\nconst (\n\tDebug Level = iota\n\tInfo\n\tWarn\n\tError\n)",
+    "highlight": "iota",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A random starting value",
+      "The length of the const block",
+      "A counter: 0, 1, 2, 3 down the block"
+    ],
+    "answer": 2,
+    "explanation": "iota restarts at 0 in each const block and increments per line; later lines repeat the previous expression, which is how Go spells an enum."
+  },
+  {
+    "id": "decl-blank",
+    "kind": "declarations",
+    "title": "Blank identifier",
+    "code": "func isNumber(s string) bool {\n\t_, err := strconv.Atoi(s)\n\treturn err == nil\n}",
+    "highlight": "_",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A placeholder assigned later",
+      "A variable named underscore",
+      "Discards that result"
+    ],
+    "answer": 2,
+    "explanation": "Same as _ in Rust; Go refuses unused local variables, so unwanted results must go to _."
+  },
+  {
+    "id": "decl-type",
+    "kind": "declarations",
+    "title": "Type declaration",
+    "code": "type UserID string\n\nfunc find(id UserID) *User {\n\treturn users[id]\n}",
+    "highlight": "type UserID string",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "An alias; UserID and string are interchangeable",
+      "A string constant named UserID",
+      "A new distinct type whose underlying type is string"
+    ],
+    "answer": 2,
+    "explanation": "A defined type is distinct: passing a plain string where a UserID is expected does not compile, like a newtype in Rust."
+  },
+  {
+    "id": "decl-alias",
+    "kind": "declarations",
+    "title": "Type alias",
+    "code": "type Handler = func(Request) Response\n\nfunc register(path string, h Handler) {\n\troutes[path] = h\n}",
+    "highlight": "type Handler = func(Request) Response",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Another name for the same type",
+      "A new type distinct from the function type",
+      "A variable that holds a function"
+    ],
+    "answer": 0,
+    "explanation": "With = it is an alias, not a new type: any func(Request) Response is a Handler and vice versa."
+  },
+  {
+    "id": "decl-visibility",
+    "kind": "declarations",
+    "title": "Case and visibility",
+    "code": "type User struct {\n\tName  string\n\temail string\n}",
+    "highlight": "email string",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "An exported field, visible outside the package",
+      "An optional field",
+      "A private field, invisible outside the package"
+    ],
+    "answer": 2,
+    "explanation": "There is no pub: an uppercase first letter means exported, lowercase means package-private, for fields, functions and types alike."
+  },
+  {
+    "id": "decl-package-var",
+    "kind": "declarations",
+    "title": "Package-level variable",
+    "code": "var defaultTimeout = 30 * time.Second\n\nfunc newClient() *Client {\n\treturn &Client{timeout: defaultTimeout}\n}",
+    "highlight": "var defaultTimeout = 30 * time.Second",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A compile-time constant of the package",
+      "A mutable variable shared by the package",
+      "A variable local to the newClient function"
+    ],
+    "answer": 1,
+    "explanation": "Package-level vars are initialized before main runs and are mutable; := is not allowed at package level, only var."
+  },
+  {
+    "id": "type-int-sizes",
+    "kind": "types",
+    "title": "Sized integers",
+    "code": "type Header struct {\n\tVersion uint8\n\tLength  uint32\n\tOffset  int64\n}",
+    "highlight": "uint8",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A signed 8-bit integer",
+      "An 8-element array",
+      "An unsigned 8-bit integer"
+    ],
+    "answer": 2,
+    "explanation": "Go has int8 to int64, uint8 to uint64 and the platform-sized int and uint; byte is another name for uint8."
+  },
+  {
+    "id": "type-int-default",
+    "kind": "types",
+    "title": "int",
+    "code": "func count(items []Item) int {\n\treturn len(items)\n}",
+    "highlight": "int",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "An arbitrary-precision integer",
+      "An integer that is always 32 bits wide",
+      "The platform-sized signed integer"
+    ],
+    "answer": 2,
+    "explanation": "int is 64 bits on 64-bit platforms and is what len, cap and loop counters use, like isize but used everywhere."
+  },
+  {
+    "id": "type-float",
+    "kind": "types",
+    "title": "Floating point",
+    "code": "func average(xs []float64) float64 {\n\tvar sum float64\n\tfor _, x := range xs {\n\t\tsum += x\n\t}\n\treturn sum / float64(len(xs))\n}",
+    "highlight": "float64(len(xs))",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Converts the int length to float64",
+      "Rounds the length to a whole number",
+      "Checks that the length fits in a float"
+    ],
+    "answer": 0,
+    "explanation": "Go never converts numeric types implicitly, so an int must be converted explicitly before it can divide a float64."
+  },
+  {
+    "id": "type-string-immutable",
+    "kind": "types",
+    "title": "Strings are immutable",
+    "code": "func greet(name string) string {\n\tmsg := \"hello, \"\n\tmsg += name\n\treturn msg\n}",
+    "highlight": "msg += name",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Fails: strings cannot change",
+      "Appends into msg's existing memory",
+      "Builds a new string and rebinds msg to it"
+    ],
+    "answer": 2,
+    "explanation": "Strings are immutable values; += allocates a new one, like String in Rust being replaced rather than pushed into."
+  },
+  {
+    "id": "type-raw-string",
+    "kind": "types",
+    "title": "Raw string literal",
+    "code": "var pattern = `^\\d{4}-\\d{2}$`\n\nfunc isDate(s string) bool {\n\treturn regexp.MustCompile(pattern).MatchString(s)\n}",
+    "highlight": "`^\\d{4}-\\d{2}$`",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A raw string, backslashes kept as written",
+      "A comment spanning a single line",
+      "A compiled regular expression value"
+    ],
+    "answer": 0,
+    "explanation": "Backquoted strings have no escapes and may span lines, like r\"...\" in Rust; double-quoted ones interpret \\n and friends."
+  },
+  {
+    "id": "type-byte-index",
+    "kind": "types",
+    "title": "Indexing a string",
+    "code": "func firstByte(s string) byte {\n\treturn s[0]\n}",
+    "highlight": "s[0]",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "The first byte, not the first character",
+      "The first whitespace-separated word",
+      "The first Unicode character of s"
+    ],
+    "answer": 0,
+    "explanation": "Indexing a string gives bytes; a non-ASCII character spans several bytes, so use range or []rune for characters."
+  },
+  {
+    "id": "type-rune",
+    "kind": "types",
+    "title": "Runes",
+    "code": "func countLetters(s string) int {\n\tn := 0\n\tfor _, r := range s {\n\t\tif unicode.IsLetter(r) {\n\t\t\tn++\n\t\t}\n\t}\n\treturn n\n}",
+    "highlight": "r := range s",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Iterates the raw bytes of the string",
+      "Iterates whitespace-separated words",
+      "Iterates Unicode characters"
+    ],
+    "answer": 2,
+    "explanation": "range over a string yields runes (Unicode code points, like char), while s[i] yields bytes."
+  },
+  {
+    "id": "type-conversion",
+    "kind": "types",
+    "title": "Explicit conversion",
+    "code": "func percent(done, total int) float64 {\n\treturn float64(done) / float64(total) * 100\n}",
+    "highlight": "float64(done)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Casts away the sign",
+      "Calls a function named float64",
+      "Converts the int to a float64"
+    ],
+    "answer": 2,
+    "explanation": "T(x) is Go's only conversion syntax, used for numbers, strings and bytes alike; there is no as keyword."
+  },
+  {
+    "id": "type-untyped-const",
+    "kind": "types",
+    "title": "Untyped constant",
+    "code": "const timeout = 5\n\nfunc wait() {\n\ttime.Sleep(timeout * time.Second)\n}",
+    "highlight": "timeout * time.Second",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Multiplies two plain integers",
+      "The constant becomes a Duration here",
+      "Does not compile: int times Duration"
+    ],
+    "answer": 1,
+    "explanation": "An untyped constant takes the type its context needs, so 5 can be an int, a float64 or a time.Duration depending on use."
+  },
+  {
+    "id": "type-bool",
+    "kind": "types",
+    "title": "Booleans",
+    "code": "func canShip(o Order) bool {\n\treturn o.Paid && !o.Shipped\n}",
+    "highlight": "o.Paid && !o.Shipped",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Assigns Paid to Shipped",
+      "True when paid and not yet shipped",
+      "Bitwise and of two flags"
+    ],
+    "answer": 1,
+    "explanation": "Booleans are their own type; ints do not convert to bool, so there is no if n { } shortcut."
+  },
+  {
+    "id": "type-string-concat",
+    "kind": "types",
+    "title": "String formatting",
+    "code": "func label(u User, n int) string {\n\treturn fmt.Sprintf(\"%s has %d items\", u.Name, n)\n}",
+    "highlight": "fmt.Sprintf(\"%s has %d items\", u.Name, n)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Builds and returns a string",
+      "Prints a line to standard output",
+      "Writes a line to the log file"
+    ],
+    "answer": 0,
+    "explanation": "Sprintf returns the string and Printf prints it; %s is a string, %d an integer, %v anything."
+  },
+  {
+    "id": "fn-params",
+    "kind": "functions",
+    "title": "Function parameters",
+    "code": "func add(a, b int) int {\n\treturn a + b\n}",
+    "highlight": "a, b int",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "One int parameter; a has no type",
+      "Two parameters, both int",
+      "One tuple parameter"
+    ],
+    "answer": 1,
+    "explanation": "Types come after names, and adjacent parameters of the same type share one type; the result type follows the parentheses."
+  },
+  {
+    "id": "fn-multi-return",
+    "kind": "functions",
+    "title": "Multiple results",
+    "code": "func divide(a, b int) (int, error) {\n\tif b == 0 {\n\t\treturn 0, errors.New(\"divide by zero\")\n\t}\n\treturn a / b, nil\n}",
+    "highlight": "(int, error)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Returns either an int or an error",
+      "One tuple result",
+      "Two results: the value and an error"
+    ],
+    "answer": 2,
+    "explanation": "Not a Result and not a tuple, just two return values; by convention the error is last and nil on success."
+  },
+  {
+    "id": "fn-named-results",
+    "kind": "functions",
+    "title": "Named results",
+    "code": "func parse(s string) (n int, err error) {\n\tn, err = strconv.Atoi(s)\n\treturn\n}",
+    "highlight": "return",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Returns nothing",
+      "Returns zero values",
+      "Returns the current n and err"
+    ],
+    "answer": 2,
+    "explanation": "Named results are variables; a bare return sends back whatever they hold, which deferred functions can still modify."
+  },
+  {
+    "id": "fn-variadic",
+    "kind": "functions",
+    "title": "Variadic parameter",
+    "code": "func sum(nums ...int) int {\n\ttotal := 0\n\tfor _, n := range nums {\n\t\ttotal += n\n\t}\n\treturn total\n}",
+    "highlight": "nums ...int",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Any number of ints, seen as a slice",
+      "Exactly three int arguments",
+      "A pointer to a single int value"
+    ],
+    "answer": 0,
+    "explanation": "A variadic parameter is a []int inside the function; call it as sum(1, 2, 3) or sum(xs...) to spread a slice."
+  },
+  {
+    "id": "fn-spread",
+    "kind": "functions",
+    "title": "Spreading a slice",
+    "code": "func logAll(msgs []string) {\n\tfmt.Println(msgs...)\n}",
+    "highlight": "msgs...",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Passes each element as a separate argument",
+      "Copies the slice",
+      "Passes the slice as one argument"
+    ],
+    "answer": 0,
+    "explanation": "The trailing ... unpacks a slice into a variadic call, where the bare slice would be one argument."
+  },
+  {
+    "id": "fn-value",
+    "kind": "functions",
+    "title": "Function value",
+    "code": "func apply(f func(int) int, x int) int {\n\treturn f(x)\n}",
+    "highlight": "f func(int) int",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A generic type parameter named f",
+      "A parameter holding a function",
+      "A method named f on the int type"
+    ],
+    "answer": 1,
+    "explanation": "Function types are written inline, func(int) int, with no Fn/FnMut/FnOnce distinction; functions are ordinary values."
+  },
+  {
+    "id": "fn-closure",
+    "kind": "functions",
+    "title": "Closure",
+    "code": "func counter() func() int {\n\tn := 0\n\treturn func() int {\n\t\tn++\n\t\treturn n\n\t}\n}",
+    "highlight": "func() int {\n\t\tn++\n\t\treturn n\n\t}",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A function returning a copy of n",
+      "A method defined on int",
+      "An anonymous function sharing n"
+    ],
+    "answer": 2,
+    "explanation": "Closures capture variables, not values, so each call to the returned function increments the same n; no move or borrow annotations."
+  },
+  {
+    "id": "fn-defer",
+    "kind": "functions",
+    "title": "defer",
+    "code": "func (c *Counter) Inc() {\n\tc.mu.Lock()\n\tdefer c.mu.Unlock()\n\tc.n++\n}",
+    "highlight": "defer c.mu.Unlock()",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Unlocks immediately",
+      "Unlocks when the function returns",
+      "Unlocks on a background thread"
+    ],
+    "answer": 1,
+    "explanation": "There is no Drop; cleanup is done with defer, which runs when the enclosing function returns, last in first out."
+  },
+  {
+    "id": "fn-defer-order",
+    "kind": "functions",
+    "title": "defer order",
+    "code": "func run() {\n\tdefer fmt.Println(\"first deferred\")\n\tdefer fmt.Println(\"second deferred\")\n\tfmt.Println(\"body\")\n}",
+    "highlight": "defer fmt.Println(\"second deferred\")",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Runs after the body, before the first one",
+      "Runs after the first deferred call",
+      "Runs immediately when reached"
+    ],
+    "answer": 0,
+    "explanation": "Deferred calls run in reverse order of registration, like a stack of destructors."
+  },
+  {
+    "id": "fn-panic",
+    "kind": "functions",
+    "title": "panic",
+    "code": "func mustEnv(key string) string {\n\tv, ok := os.LookupEnv(key)\n\tif !ok {\n\t\tpanic(\"missing env \" + key)\n\t}\n\treturn v\n}",
+    "highlight": "panic(\"missing env \" + key)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Aborts the program with that message",
+      "Logs a warning and continues",
+      "Returns an error to the caller"
+    ],
+    "answer": 0,
+    "explanation": "panic is for unrecoverable bugs and runs deferred functions on the way out; expected failures use error values instead."
+  },
+  {
+    "id": "fn-recover",
+    "kind": "functions",
+    "title": "recover",
+    "code": "func safely(f func()) (err error) {\n\tdefer func() {\n\t\tif r := recover(); r != nil {\n\t\t\terr = fmt.Errorf(\"panic: %v\", r)\n\t\t}\n\t}()\n\tf()\n\treturn nil\n}",
+    "highlight": "recover()",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Resets err back to nil",
+      "Catches a panic in progress",
+      "Retries f until it succeeds"
+    ],
+    "answer": 1,
+    "explanation": "recover only works inside a deferred function and turns a panic into a value, roughly catch_unwind."
+  },
+  {
+    "id": "fn-init",
+    "kind": "functions",
+    "title": "init",
+    "code": "var registry = map[string]Codec{}\n\nfunc init() {\n\tregistry[\"json\"] = jsonCodec{}\n}",
+    "highlight": "func init()",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Runs automatically when the package loads",
+      "A constructor called by the user",
+      "The entry point of the program"
+    ],
+    "answer": 0,
+    "explanation": "Each file may have init functions that run once before main, after package variables are initialized; nothing calls them explicitly."
+  },
+  {
+    "id": "fn-method-value",
+    "kind": "functions",
+    "title": "Method value",
+    "code": "func main() {\n\tc := &Counter{}\n\tinc := c.Inc\n\tinc()\n\tinc()\n}",
+    "highlight": "inc := c.Inc",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A pointer to the Counter c",
+      "A function with c already bound as receiver",
+      "A copy of the method's source code"
+    ],
+    "answer": 1,
+    "explanation": "c.Inc without parentheses is a method value with the receiver already bound, like a bound method in Python."
+  },
+  {
+    "id": "ctl-if-init",
+    "kind": "control",
+    "title": "if with a statement",
+    "code": "func get(cache map[string]int, key string) int {\n\tif v, ok := cache[key]; ok {\n\t\treturn v\n\t}\n\treturn 0\n}",
+    "highlight": "v, ok := cache[key]; ok",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Declares two package-level variables",
+      "Looks up first, then uses ok as the condition",
+      "Two separate conditions, both must hold"
+    ],
+    "answer": 1,
+    "explanation": "An if may start with one statement; the condition follows the semicolon, and v is scoped to the if."
+  },
+  {
+    "id": "ctl-else",
+    "kind": "control",
+    "title": "else",
+    "code": "func sign(n int) string {\n\tif n < 0 {\n\t\treturn \"negative\"\n\t} else if n == 0 {\n\t\treturn \"zero\"\n\t}\n\treturn \"positive\"\n}",
+    "highlight": "} else if n == 0 {",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A second condition tried if the first fails",
+      "A loop that keeps running while n is zero",
+      "A match arm guarded by a condition"
+    ],
+    "answer": 0,
+    "explanation": "else and else if must sit on the same line as the closing brace; braces are mandatory and conditions take no parentheses."
+  },
+  {
+    "id": "ctl-for-classic",
+    "kind": "control",
+    "title": "Three-clause for",
+    "code": "func fill(buf []byte, b byte) {\n\tfor i := 0; i < len(buf); i++ {\n\t\tbuf[i] = b\n\t}\n}",
+    "highlight": "for i := 0; i < len(buf); i++",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A loop over a range object",
+      "An infinite loop",
+      "A counted loop from 0 to len-1"
+    ],
+    "answer": 2,
+    "explanation": "for is the only loop keyword; this C-style form is used when you need the index arithmetic, otherwise range is preferred."
+  },
+  {
+    "id": "ctl-for-while",
+    "kind": "control",
+    "title": "for as while",
+    "code": "func drain(q *Queue) {\n\tfor !q.Empty() {\n\t\tq.Pop()\n\t}\n}",
+    "highlight": "for !q.Empty()",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Loops over the queue's elements",
+      "Loops while the condition holds",
+      "Loops exactly once"
+    ],
+    "answer": 1,
+    "explanation": "A for with just a condition is Go's while; there is no while keyword."
+  },
+  {
+    "id": "ctl-for-forever",
+    "kind": "control",
+    "title": "Infinite for",
+    "code": "func (w *Worker) Run() {\n\tfor {\n\t\tjob := <-w.jobs\n\t\tw.handle(job)\n\t}\n}",
+    "highlight": "for {",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Loops until return, break or panic",
+      "A block that runs exactly once",
+      "Runs the block exactly zero times"
+    ],
+    "answer": 0,
+    "explanation": "for with no clauses is loop {} in Rust; the usual exit is return or break."
+  },
+  {
+    "id": "ctl-range-slice",
+    "kind": "control",
+    "title": "range over a slice",
+    "code": "func printAll(items []Item) {\n\tfor i, item := range items {\n\t\tfmt.Println(i, item.Name)\n\t}\n}",
+    "highlight": "i, item := range items",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Iterates: i is the index, item the element",
+      "Iterates the keys and values of a map",
+      "Iterates: i is the element, item the index"
+    ],
+    "answer": 0,
+    "explanation": "range yields the index and a copy of the element; to skip the index write for _, item := range items."
+  },
+  {
+    "id": "ctl-range-map",
+    "kind": "control",
+    "title": "range over a map",
+    "code": "func total(prices map[string]int) int {\n\tsum := 0\n\tfor _, p := range prices {\n\t\tsum += p\n\t}\n\treturn sum\n}",
+    "highlight": "_, p := range prices",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Iterates the values, ignoring keys",
+      "Iterates the keys, ignoring values",
+      "Iterates index and value pairs"
+    ],
+    "answer": 0,
+    "explanation": "range over a map yields key and value in no fixed order; iteration order is deliberately randomized."
+  },
+  {
+    "id": "ctl-range-int",
+    "kind": "control",
+    "title": "range over an int",
+    "code": "func retry(f func() error) error {\n\tvar err error\n\tfor range 3 {\n\t\tif err = f(); err == nil {\n\t\t\treturn nil\n\t\t}\n\t}\n\treturn err\n}",
+    "highlight": "for range 3",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Loops three times",
+      "Loops over the digits of 3",
+      "Loops until f returns 3"
+    ],
+    "answer": 0,
+    "explanation": "Since Go 1.22 range over an integer n runs n times, like for _ in 0..3."
+  },
+  {
+    "id": "ctl-switch",
+    "kind": "control",
+    "title": "switch",
+    "code": "func weight(status string) int {\n\tswitch status {\n\tcase \"active\":\n\t\treturn 1\n\tcase \"paused\", \"stopped\":\n\t\treturn 0\n\tdefault:\n\t\treturn -1\n\t}\n}",
+    "highlight": "case \"paused\", \"stopped\":",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Matches a two-element tuple",
+      "Runs two cases one after another",
+      "Matches either value"
+    ],
+    "answer": 2,
+    "explanation": "A case may list several values, like \"paused\" | \"stopped\"; every case breaks automatically, nothing falls through."
+  },
+  {
+    "id": "ctl-switch-true",
+    "kind": "control",
+    "title": "switch without a value",
+    "code": "func grade(score int) string {\n\tswitch {\n\tcase score >= 90:\n\t\treturn \"A\"\n\tcase score >= 80:\n\t\treturn \"B\"\n\tdefault:\n\t\treturn \"C\"\n\t}\n}",
+    "highlight": "switch {",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Switches on an empty struct value",
+      "Loops over every case in order",
+      "Picks the first case that is true"
+    ],
+    "answer": 2,
+    "explanation": "A switch with no expression is an if-else chain that reads top to bottom; the first true case wins."
+  },
+  {
+    "id": "ctl-fallthrough",
+    "kind": "control",
+    "title": "fallthrough",
+    "code": "func describe(n int) string {\n\tswitch {\n\tcase n > 100:\n\t\tfallthrough\n\tcase n > 10:\n\t\treturn \"big\"\n\tdefault:\n\t\treturn \"small\"\n\t}\n}",
+    "highlight": "fallthrough",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Continues into the next case body",
+      "Jumps straight to the default case",
+      "Exits the switch immediately"
+    ],
+    "answer": 0,
+    "explanation": "Cases never fall through by default; the fallthrough keyword asks for it explicitly, and it is rare."
+  },
+  {
+    "id": "ctl-labeled-break",
+    "kind": "control",
+    "title": "Labeled break",
+    "code": "func find(grid [][]int, target int) bool {\nouter:\n\tfor _, row := range grid {\n\t\tfor _, v := range row {\n\t\t\tif v == target {\n\t\t\t\tbreak outer\n\t\t\t}\n\t\t}\n\t}\n\treturn false\n}",
+    "highlight": "break outer",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Exits both loops at once",
+      "Jumps back to the start of the outer loop",
+      "Exits only the inner loop"
+    ],
+    "answer": 0,
+    "explanation": "Labels let break and continue target an outer loop, like 'outer: in Rust."
+  },
+  {
+    "id": "ctl-goto-free",
+    "kind": "control",
+    "title": "continue",
+    "code": "func sumPositive(xs []int) int {\n\tsum := 0\n\tfor _, x := range xs {\n\t\tif x <= 0 {\n\t\t\tcontinue\n\t\t}\n\t\tsum += x\n\t}\n\treturn sum\n}",
+    "highlight": "continue",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Exits the loop",
+      "Skips to the next iteration",
+      "Restarts the loop from the beginning"
+    ],
+    "answer": 1,
+    "explanation": "continue and break work as in C and Rust."
+  },
+  {
+    "id": "col-array",
+    "kind": "collections",
+    "title": "Array",
+    "code": "func checksum(data []byte) (sum [4]byte) {\n\tfor i, b := range data {\n\t\tsum[i%4] ^= b\n\t}\n\treturn sum\n}",
+    "highlight": "[4]byte",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A slice that can grow with append",
+      "A fixed-size array, copied by value",
+      "A pointer to four bytes"
+    ],
+    "answer": 1,
+    "explanation": "[N]T is a value type with the length in the type, like [u8; 4], and APIs use slices instead."
+  },
+  {
+    "id": "col-slice-literal",
+    "kind": "collections",
+    "title": "Slice literal",
+    "code": "func main() {\n\tprimes := []int{2, 3, 5, 7}\n\tfmt.Println(len(primes))\n}",
+    "highlight": "[]int{2, 3, 5, 7}",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A growable list with 4 elements",
+      "A set of 4 distinct values",
+      "A fixed-length array of 4"
+    ],
+    "answer": 0,
+    "explanation": "[]T is a slice, the Vec<T> of Go; [4]int would be a fixed array."
+  },
+  {
+    "id": "col-make-slice",
+    "kind": "collections",
+    "title": "make for slices",
+    "code": "func zeros(n int) []int {\n\treturn make([]int, n)\n}",
+    "highlight": "make([]int, n)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A pointer to an int array",
+      "A slice of n zeros, ready to index",
+      "An empty slice with room for n"
+    ],
+    "answer": 1,
+    "explanation": "make([]T, len) allocates len zero elements; make([]T, 0, cap) is the empty-with-capacity form, like Vec::with_capacity."
+  },
+  {
+    "id": "col-len-cap",
+    "kind": "collections",
+    "title": "len and cap",
+    "code": "func stats(s []int) (int, int) {\n\treturn len(s), cap(s)\n}",
+    "highlight": "cap(s)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "The number of elements in s",
+      "The size of the backing array",
+      "The largest element of s"
+    ],
+    "answer": 1,
+    "explanation": "len is the element count and cap the size of the backing array; append reallocates only when len reaches cap."
+  },
+  {
+    "id": "col-append",
+    "kind": "collections",
+    "title": "append",
+    "code": "func main() {\n\tprimes := []int{2, 3, 5, 7}\n\tprimes = append(primes, 11)\n\tfmt.Println(primes)\n}",
+    "highlight": "primes = append(primes, 11)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Appends and keeps the returned slice",
+      "Builds a new array; the old slice is unchanged",
+      "Appends in place; the result can be dropped"
+    ],
+    "answer": 0,
+    "explanation": "append may reallocate, so it is always written s = append(s, x); dropping the result is a bug."
+  },
+  {
+    "id": "col-append-slice",
+    "kind": "collections",
+    "title": "Appending a slice",
+    "code": "func merge(a, b []Item) []Item {\n\treturn append(a, b...)\n}",
+    "highlight": "append(a, b...)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Appends b as a single nested element",
+      "Appends every element of b to a",
+      "Concatenates into a new array, a untouched"
+    ],
+    "answer": 1,
+    "explanation": "The ... spreads b into the variadic append, which may write into a's spare capacity, so the result is the new slice."
+  },
+  {
+    "id": "col-slicing",
+    "kind": "collections",
+    "title": "Slice expression",
+    "code": "func top3(items []Item) []Item {\n\treturn items[:3]\n}",
+    "highlight": "items[:3]",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "The element at index 3",
+      "A view of the first 3 elements",
+      "An independent copy of the first 3"
+    ],
+    "answer": 1,
+    "explanation": "Like &v[..3], a view that shares memory; modifying the result modifies items, and there is no borrow checker to warn you."
+  },
+  {
+    "id": "col-copy",
+    "kind": "collections",
+    "title": "copy",
+    "code": "func snapshot(items []Item) []Item {\n\tout := make([]Item, len(items))\n\tcopy(out, items)\n\treturn out\n}",
+    "highlight": "copy(out, items)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Copies elements from items into out",
+      "Appends items to out",
+      "Makes out an alias of items"
+    ],
+    "answer": 0,
+    "explanation": "copy(dst, src) copies min(len) elements between overlapping-safe slices; slices.Clone(items) is the one-liner."
+  },
+  {
+    "id": "col-nil-slice",
+    "kind": "collections",
+    "title": "nil slice",
+    "code": "func names(users []User) []string {\n\tvar out []string\n\tfor _, u := range users {\n\t\tout = append(out, u.Name)\n\t}\n\treturn out\n}",
+    "highlight": "var out []string",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A slice that must be made before use",
+      "A nil slice, usable with append and len",
+      "A pointer that will panic on append"
+    ],
+    "answer": 1,
+    "explanation": "The zero slice is nil, has length 0, and append works on it; there is no need to make it first."
+  },
+  {
+    "id": "col-map-literal",
+    "kind": "collections",
+    "title": "Map literal",
+    "code": "var codes = map[string]int{\n\t\"ok\":        200,\n\t\"not found\": 404,\n}",
+    "highlight": "map[string]int{",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A struct with two integer fields",
+      "A hash map with initial entries",
+      "An ordered list of string-int pairs"
+    ],
+    "answer": 1,
+    "explanation": "map[K]V is the built-in hash map, like HashMap<K, V>; literal entries are key: value."
+  },
+  {
+    "id": "col-make-map",
+    "kind": "collections",
+    "title": "make for maps",
+    "code": "func count(words []string) map[string]int {\n\tcounts := make(map[string]int)\n\tfor _, w := range words {\n\t\tcounts[w]++\n\t}\n\treturn counts\n}",
+    "highlight": "make(map[string]int)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Creates a fixed-size array",
+      "Declares the map type without allocating",
+      "Creates an empty, writable map"
+    ],
+    "answer": 2,
+    "explanation": "A map must be made before writing; a declared but un-made map is nil, readable but panics on write."
+  },
+  {
+    "id": "col-map-ok",
+    "kind": "collections",
+    "title": "Map lookup",
+    "code": "func find(users map[string]User, id string) (User, error) {\n\tu, ok := users[id]\n\tif !ok {\n\t\treturn User{}, ErrNotFound\n\t}\n\treturn u, nil\n}",
+    "highlight": "u, ok := users[id]",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Looks up id; panics if it is missing",
+      "Looks up id; ok says if it exists",
+      "Looks up two keys at the same time"
+    ],
+    "answer": 1,
+    "explanation": "Map lookup does not return an Option: a missing key yields the zero value, and the second result tells you whether it was there."
+  },
+  {
+    "id": "col-map-increment",
+    "kind": "collections",
+    "title": "Map update",
+    "code": "func tally(votes []string) map[string]int {\n\tn := map[string]int{}\n\tfor _, v := range votes {\n\t\tn[v]++\n\t}\n\treturn n\n}",
+    "highlight": "n[v]++",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Increments the count, from 0 if new",
+      "Panics because the key is missing",
+      "Appends v to the map's key list"
+    ],
+    "answer": 0,
+    "explanation": "Reading a missing key gives the zero value, so n[v]++ works without an entry check; no entry().or_insert dance."
+  },
+  {
+    "id": "col-delete",
+    "kind": "collections",
+    "title": "delete",
+    "code": "func (s *SessionStore) Logout(id string) {\n\tdelete(s.sessions, id)\n}",
+    "highlight": "delete(s.sessions, id)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Marks the session as deleted",
+      "Removes the key from the map",
+      "Frees the whole map"
+    ],
+    "answer": 1,
+    "explanation": "delete is a builtin; deleting a missing key is a no-op, not an error."
+  },
+  {
+    "id": "col-set",
+    "kind": "collections",
+    "title": "Set as a map",
+    "code": "func distinct(ids []string) int {\n\tseen := make(map[string]struct{})\n\tfor _, id := range ids {\n\t\tseen[id] = struct{}{}\n\t}\n\treturn len(seen)\n}",
+    "highlight": "map[string]struct{}",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A set: keys with zero-size values",
+      "A map with no values allowed",
+      "A map from string to an empty struct type name"
+    ],
+    "answer": 0,
+    "explanation": "Go has no set type; a map to the empty struct is the idiom, since struct{} takes no memory."
+  },
+  {
+    "id": "col-sort",
+    "kind": "collections",
+    "title": "Sorting",
+    "code": "func byAge(users []User) {\n\tsort.Slice(users, func(i, j int) bool {\n\t\treturn users[i].Age < users[j].Age\n\t})\n}",
+    "highlight": "func(i, j int) bool {\n\t\treturn users[i].Age < users[j].Age\n\t}",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A function returning the sorted slice",
+      "A less-than function comparing two positions",
+      "A filter keeping younger users"
+    ],
+    "answer": 1,
+    "explanation": "sort.Slice sorts in place with a less(i, j) callback over indexes; slices.SortFunc takes a cmp(a, b) int instead."
+  },
+  {
+    "id": "st-struct",
+    "kind": "structs",
+    "title": "Struct type",
+    "code": "type User struct {\n\tName string\n\tAge  int\n}",
+    "highlight": "type User struct {\n\tName string\n\tAge  int\n}",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "An enum with two variants",
+      "A tuple type",
+      "A type with two named fields"
+    ],
+    "answer": 2,
+    "explanation": "Field types follow field names; there is no derive, and the type is comparable and copyable by default."
+  },
+  {
+    "id": "st-literal",
+    "kind": "structs",
+    "title": "Struct literal",
+    "code": "func newUser(name string) User {\n\treturn User{Name: name, Age: 0}\n}",
+    "highlight": "User{Name: name, Age: 0}",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Builds a map",
+      "Calls a function named User",
+      "Builds a User value by field name"
+    ],
+    "answer": 2,
+    "explanation": "Like a Rust struct literal but with colons; any field left out takes its zero value."
+  },
+  {
+    "id": "st-zero",
+    "kind": "structs",
+    "title": "Zero-value struct",
+    "code": "func newCounter() *Counter {\n\tvar c Counter\n\treturn &c\n}",
+    "highlight": "var c Counter",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "An uninitialized Counter, unusable",
+      "A nil pointer to a Counter",
+      "A Counter with all fields zeroed"
+    ],
+    "answer": 2,
+    "explanation": "Every type has a usable zero value, so a struct declared with var is already valid; many types are designed to work without a constructor."
+  },
+  {
+    "id": "st-pointer",
+    "kind": "structs",
+    "title": "Taking an address",
+    "code": "func main() {\n\tu := User{Name: \"a\"}\n\tp := &u\n\tp.Name = \"b\"\n\tfmt.Println(u.Name)\n}",
+    "highlight": "p := &u",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A pointer to u",
+      "A reference counted handle",
+      "A copy of u"
+    ],
+    "answer": 0,
+    "explanation": "& takes an address and * dereferences, as in C, but there is no pointer arithmetic and no ownership rules."
+  },
+  {
+    "id": "st-pointer-field",
+    "kind": "structs",
+    "title": "Field through a pointer",
+    "code": "func rename(p *User, name string) {\n\tp.Name = name\n}",
+    "highlight": "p.Name = name",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Does not compile; needs (*p).Name",
+      "Changes the field, auto-dereferencing",
+      "Changes a copy of the struct"
+    ],
+    "answer": 1,
+    "explanation": "Field access through a pointer dereferences automatically: no -> and no (*p)."
+  },
+  {
+    "id": "st-new",
+    "kind": "structs",
+    "title": "new",
+    "code": "func newBuffer() *bytes.Buffer {\n\treturn new(bytes.Buffer)\n}",
+    "highlight": "new(bytes.Buffer)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Allocates uninitialized memory",
+      "Calls the Buffer constructor function",
+      "Allocates a zeroed Buffer, returns a pointer"
+    ],
+    "answer": 2,
+    "explanation": "new(T) is &T{} for any type: zeroed memory and a pointer; there are no constructors in the language."
+  },
+  {
+    "id": "st-embed",
+    "kind": "structs",
+    "title": "Embedding",
+    "code": "type User struct {\n\tEntity\n\tName string\n}\n\nfunc id(u User) string {\n\treturn u.ID\n}",
+    "highlight": "Entity",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A parent class User inherits from",
+      "An embedded struct, fields promoted",
+      "A field named Entity of type Entity"
+    ],
+    "answer": 1,
+    "explanation": "Embedding a type without a field name promotes its fields and methods, so u.ID works; it is composition, not inheritance."
+  },
+  {
+    "id": "st-method-value-recv",
+    "kind": "structs",
+    "title": "Value receiver",
+    "code": "func (u User) Greeting() string {\n\treturn \"hi \" + u.Name\n}",
+    "highlight": "(u User)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A method on User that works on a copy",
+      "A static function",
+      "A method that can modify the caller's User"
+    ],
+    "answer": 0,
+    "explanation": "A value receiver gets a copy; changes to u inside do not reach the caller, like taking self by value."
+  },
+  {
+    "id": "st-method-ptr-recv",
+    "kind": "structs",
+    "title": "Pointer receiver",
+    "code": "func (u *User) Rename(name string) {\n\tu.Name = name\n}",
+    "highlight": "(u *User)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A method on a copy",
+      "A method on the User type itself",
+      "A method that modifies the caller's User"
+    ],
+    "answer": 2,
+    "explanation": "A pointer receiver sees the caller's value, like &mut self; Go takes the address automatically when calling it on a variable."
+  },
+  {
+    "id": "st-auto-addr",
+    "kind": "structs",
+    "title": "Calling a pointer method",
+    "code": "func main() {\n\tu := User{Name: \"a\"}\n\tu.Rename(\"b\")\n\tfmt.Println(u.Name)\n}",
+    "highlight": "u.Rename(\"b\")",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Does not compile without (&u).Rename",
+      "Calls the pointer method on &u automatically",
+      "Calls it on a copy, u stays \"a\""
+    ],
+    "answer": 1,
+    "explanation": "Go inserts the & for addressable variables, so u.Rename(\"b\") renames u."
+  },
+  {
+    "id": "st-compare",
+    "kind": "structs",
+    "title": "Struct comparison",
+    "code": "func same(a, b Point) bool {\n\treturn a == b\n}",
+    "highlight": "a == b",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Compares addresses",
+      "Does not compile without an Eq implementation",
+      "Compares field by field"
+    ],
+    "answer": 2,
+    "explanation": "Structs whose fields are all comparable support == out of the box; no derive(PartialEq)."
+  },
+  {
+    "id": "st-tags",
+    "kind": "structs",
+    "title": "Struct tags",
+    "code": "type User struct {\n\tName  string `json:\"name\"`\n\tEmail string `json:\"email,omitempty\"`\n}",
+    "highlight": "`json:\"name\"`",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "The field's default value",
+      "A comment attached to the field",
+      "Metadata encoding/json reads for the name"
+    ],
+    "answer": 2,
+    "explanation": "Tags are strings attached to fields and read via reflection, the way serde attributes name fields."
+  },
+  {
+    "id": "if-decl",
+    "kind": "interfaces",
+    "title": "Interface type",
+    "code": "type Notifier interface {\n\tNotify(msg string) error\n}",
+    "highlight": "type Notifier interface {\n\tNotify(msg string) error\n}",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A set of methods a type must have",
+      "An abstract base class",
+      "A struct with one function field"
+    ],
+    "answer": 0,
+    "explanation": "An interface is just a method set, like a trait with only required methods and no associated types."
+  },
+  {
+    "id": "if-implicit",
+    "kind": "interfaces",
+    "title": "Implicit implementation",
+    "code": "type Stringer interface {\n\tString() string\n}\n\nfunc (u User) String() string { return u.Name }\n\nvar s Stringer = User{Name: \"a\"}",
+    "highlight": "var s Stringer = User{Name: \"a\"}",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Valid: having a String method is enough",
+      "Does not compile: User never declares Stringer",
+      "Converts User to a string and stores it in s"
+    ],
+    "answer": 0,
+    "explanation": "Interfaces are implemented implicitly: having the methods is all it takes, there is no impl Trait for."
+  },
+  {
+    "id": "if-param",
+    "kind": "interfaces",
+    "title": "Interface parameter",
+    "code": "func alert(n Notifier, msg string) error {\n\treturn n.Notify(msg)\n}",
+    "highlight": "n Notifier",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A generic type parameter",
+      "A pointer to a Notifier struct",
+      "Any value with a Notify method"
+    ],
+    "answer": 2,
+    "explanation": "An interface parameter is dynamic dispatch, like &dyn Trait; the concrete type is chosen at the call site."
+  },
+  {
+    "id": "if-any",
+    "kind": "interfaces",
+    "title": "any",
+    "code": "func describe(v any) string {\n\treturn fmt.Sprintf(\"%v\", v)\n}",
+    "highlight": "v any",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "An untyped variable",
+      "A null-able value",
+      "A value of any type"
+    ],
+    "answer": 2,
+    "explanation": "any is an alias for interface{}, the empty interface every type satisfies; it is Go's Box<dyn Any>."
+  },
+  {
+    "id": "if-assert",
+    "kind": "interfaces",
+    "title": "Type assertion",
+    "code": "func asUser(v any) (User, bool) {\n\tu, ok := v.(User)\n\treturn u, ok\n}",
+    "highlight": "v.(User)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Casts v to User, truncating it",
+      "Calls the function User with v",
+      "Checks v holds a User and extracts it"
+    ],
+    "answer": 2,
+    "explanation": "x.(T) asks an interface value for its concrete type; the two-result form reports success instead of panicking."
+  },
+  {
+    "id": "if-type-switch",
+    "kind": "interfaces",
+    "title": "Type switch",
+    "code": "func describe(v any) string {\n\tswitch x := v.(type) {\n\tcase int:\n\t\treturn \"int \" + strconv.Itoa(x)\n\tcase string:\n\t\treturn \"string \" + x\n\tdefault:\n\t\treturn \"other\"\n\t}\n}",
+    "highlight": "switch x := v.(type)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Branches on the concrete type held by v",
+      "Converts v to each type in turn",
+      "Switches on the type name as a string"
+    ],
+    "answer": 0,
+    "explanation": "A type switch is a match over dynamic types; in each case x has that case's type."
+  },
+  {
+    "id": "if-embed",
+    "kind": "interfaces",
+    "title": "Embedded interface",
+    "code": "type ReadWriter interface {\n\tReader\n\tWriter\n}",
+    "highlight": "Reader\n\tWriter",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Two fields",
+      "The union of both method sets",
+      "Two implementations to choose from"
+    ],
+    "answer": 1,
+    "explanation": "An interface may embed others, combining their methods, like trait A: B + C."
+  },
+  {
+    "id": "if-nil",
+    "kind": "interfaces",
+    "title": "nil interface",
+    "code": "func pick(primary, fallback Notifier) Notifier {\n\tif primary == nil {\n\t\treturn fallback\n\t}\n\treturn primary\n}",
+    "highlight": "primary == nil",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Always false for interfaces",
+      "True when the held value is zero",
+      "True when the interface holds no value"
+    ],
+    "answer": 2,
+    "explanation": "An interface value is nil only when it holds no concrete value at all; the zero value of any interface is nil."
+  },
+  {
+    "id": "err-interface",
+    "kind": "errors",
+    "title": "The error type",
+    "code": "type error interface {\n\tError() string\n}",
+    "highlight": "type error interface {\n\tError() string\n}",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "An interface: anything with Error() string",
+      "A struct holding an error message string",
+      "A base class every exception extends"
+    ],
+    "answer": 0,
+    "explanation": "error is an ordinary interface; any type with an Error() string method is an error, and the stdlib defines it exactly like this."
+  },
+  {
+    "id": "err-check",
+    "kind": "errors",
+    "title": "Error check",
+    "code": "func double(s string) (int, error) {\n\tn, err := strconv.Atoi(s)\n\tif err != nil {\n\t\treturn 0, err\n\t}\n\treturn n * 2, nil\n}",
+    "highlight": "if err != nil {\n\t\treturn 0, err\n\t}",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Panics and exits the program",
+      "Returns the error to the caller",
+      "Logs the error and keeps going"
+    ],
+    "answer": 1,
+    "explanation": "This is what Rust's ? expands to; Go has no ?, so these three lines are written out every time."
+  },
+  {
+    "id": "err-new",
+    "kind": "errors",
+    "title": "errors.New",
+    "code": "var ErrNotFound = errors.New(\"not found\")\n\nfunc find(id string) (*User, error) {\n\treturn nil, ErrNotFound\n}",
+    "highlight": "errors.New(\"not found\")",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Throws an exception with that message",
+      "Logs the message as an error",
+      "Creates an error value with that message"
+    ],
+    "answer": 2,
+    "explanation": "Errors are plain values; a package-level one like ErrNotFound is a sentinel callers can compare against."
+  },
+  {
+    "id": "err-wrap",
+    "kind": "errors",
+    "title": "Wrapping with %w",
+    "code": "func load(path string) error {\n\tif err := read(path); err != nil {\n\t\treturn fmt.Errorf(\"load %s: %w\", path, err)\n\t}\n\treturn nil\n}",
+    "highlight": "%w",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Wraps err so the chain can be inspected",
+      "Prints err as plain text into the message",
+      "Writes err to the file at path"
+    ],
+    "answer": 0,
+    "explanation": "%w keeps the original error inside the new one; %v would flatten it to text and break errors.Is and errors.As."
+  },
+  {
+    "id": "err-is",
+    "kind": "errors",
+    "title": "errors.Is",
+    "code": "func handle(err error) {\n\tif errors.Is(err, ErrNotFound) {\n\t\tfmt.Println(\"missing\")\n\t}\n}",
+    "highlight": "errors.Is(err, ErrNotFound)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "True if ErrNotFound is anywhere in err's chain",
+      "True only if err is exactly ErrNotFound",
+      "Compares the two messages"
+    ],
+    "answer": 0,
+    "explanation": "errors.Is unwraps through %w layers to find a sentinel, where == would miss a wrapped one."
+  },
+  {
+    "id": "err-as",
+    "kind": "errors",
+    "title": "errors.As",
+    "code": "func status(err error) int {\n\tvar nf *NotFoundError\n\tif errors.As(err, &nf) {\n\t\treturn 404\n\t}\n\treturn 500\n}",
+    "highlight": "errors.As(err, &nf)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Finds a *NotFoundError in the chain",
+      "Converts err to a NotFoundError",
+      "Compares err with nf for equality"
+    ],
+    "answer": 0,
+    "explanation": "errors.As is the typed match through the chain, like downcasting with a pointer to fill."
+  },
+  {
+    "id": "err-custom",
+    "kind": "errors",
+    "title": "Custom error type",
+    "code": "type NotFoundError struct {\n\tID string\n}\n\nfunc (e *NotFoundError) Error() string {\n\treturn \"no record \" + e.ID\n}",
+    "highlight": "func (e *NotFoundError) Error() string",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Makes *NotFoundError an error",
+      "Overrides the default error message",
+      "Declares a method that errors can call"
+    ],
+    "answer": 0,
+    "explanation": "Implementing Error() string is all a type needs to be an error; no impl std::error::Error ceremony."
+  },
+  {
+    "id": "cc-go",
+    "kind": "concurrency",
+    "title": "goroutine",
+    "code": "func main() {\n\tjobs := make(chan int)\n\tgo worker(jobs)\n\tjobs <- 1\n}",
+    "highlight": "go worker(jobs)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Runs worker concurrently without waiting",
+      "Declares a function named worker",
+      "Calls worker and waits for it to return"
+    ],
+    "answer": 0,
+    "explanation": "The go keyword starts a goroutine, like thread::spawn but cheap; it returns no handle, so waiting is done with channels or a WaitGroup."
+  },
+  {
+    "id": "cc-go-closure",
+    "kind": "concurrency",
+    "title": "goroutine with a closure",
+    "code": "func (p *Pool) Start() {\n\tfor i := 0; i < p.size; i++ {\n\t\tgo func() {\n\t\t\tp.work(i)\n\t\t}()\n\t}\n}",
+    "highlight": "go func() {\n\t\t\tp.work(i)\n\t\t}()",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Starts a goroutine running the closure",
+      "Defines a function to run later",
+      "Runs the closure synchronously"
+    ],
+    "answer": 0,
+    "explanation": "go func(){...}() launches an inline closure; since Go 1.22 each loop iteration has its own i, so the capture is safe."
+  },
+  {
+    "id": "cc-chan-make",
+    "kind": "concurrency",
+    "title": "Unbuffered channel",
+    "code": "func main() {\n\tresults := make(chan int)\n\tgo func() { results <- compute() }()\n\tfmt.Println(<-results)\n}",
+    "highlight": "make(chan int)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A channel where send waits for a receiver",
+      "An unbounded queue of ints",
+      "A channel that holds exactly one value"
+    ],
+    "answer": 0,
+    "explanation": "An unbuffered channel is a rendezvous: both sides block until the other arrives, unlike an mpsc channel that queues."
+  },
+  {
+    "id": "cc-chan-buffered",
+    "kind": "concurrency",
+    "title": "Buffered channel",
+    "code": "func main() {\n\tresults := make(chan int, 10)\n\tgo func() { results <- compute() }()\n\tfmt.Println(<-results)\n}",
+    "highlight": "make(chan int, 10)",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A channel that queues up to 10 values",
+      "A channel of 10-element arrays",
+      "A channel for exactly 10 goroutines"
+    ],
+    "answer": 0,
+    "explanation": "The second argument is the buffer size; sends block only when the buffer is full."
+  },
+  {
+    "id": "cc-send",
+    "kind": "concurrency",
+    "title": "Send and receive",
+    "code": "func main() {\n\tresults := make(chan int)\n\tgo func() { results <- compute() }()\n\tr := <-results\n\tfmt.Println(r)\n}",
+    "highlight": "<-results",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Closes the channel",
+      "Receives a value, waiting if none is ready",
+      "Sends a value, waiting for a receiver"
+    ],
+    "answer": 1,
+    "explanation": "The arrow shows the data direction: ch <- v sends, <-ch receives."
+  },
+  {
+    "id": "cc-direction",
+    "kind": "concurrency",
+    "title": "Channel direction",
+    "code": "func producer(out chan<- Job) {\n\tfor _, j := range load() {\n\t\tout <- j\n\t}\n}",
+    "highlight": "chan<- Job",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A receive-only channel",
+      "A send-only channel",
+      "A channel that is closed"
+    ],
+    "answer": 1,
+    "explanation": "chan<- T can only be sent to and <-chan T only received from; the compiler enforces the direction at the signature."
+  },
+  {
+    "id": "cc-close-range",
+    "kind": "concurrency",
+    "title": "close and range",
+    "code": "func consume(jobs chan Job) {\n\tfor j := range jobs {\n\t\thandle(j)\n\t}\n}",
+    "highlight": "range jobs",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Receives exactly once",
+      "Iterates a snapshot of the channel",
+      "Receives until the channel is closed"
+    ],
+    "answer": 2,
+    "explanation": "range over a channel loops until the sender calls close; closing is a signal, not a destruction."
+  },
+  {
+    "id": "cc-select",
+    "kind": "concurrency",
+    "title": "select",
+    "code": "func fetch(ctx context.Context, results chan Result) (Result, error) {\n\tselect {\n\tcase r := <-results:\n\t\treturn r, nil\n\tcase <-ctx.Done():\n\t\treturn Result{}, ctx.Err()\n\t}\n}",
+    "highlight": "select {",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Tries each case once, in order",
+      "Waits for whichever case is ready first",
+      "Runs every case that is ready"
+    ],
+    "answer": 1,
+    "explanation": "select is a switch over channel operations; it blocks until one case can proceed and picks randomly among ready ones."
+  },
+  {
+    "id": "cc-select-default",
+    "kind": "concurrency",
+    "title": "select with default",
+    "code": "func trySend(ch chan Job, j Job) bool {\n\tselect {\n\tcase ch <- j:\n\t\treturn true\n\tdefault:\n\t\treturn false\n\t}\n}",
+    "highlight": "default:",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Runs when the channel is closed",
+      "Runs at once if no case is ready",
+      "Runs after the send succeeds"
+    ],
+    "answer": 1,
+    "explanation": "A default case makes select non-blocking: it is the try_send pattern."
+  },
+  {
+    "id": "cc-waitgroup",
+    "kind": "concurrency",
+    "title": "WaitGroup",
+    "code": "func runAll(tasks []func()) {\n\tvar wg sync.WaitGroup\n\tfor _, t := range tasks {\n\t\twg.Add(1)\n\t\tgo func() {\n\t\t\tdefer wg.Done()\n\t\t\tt()\n\t\t}()\n\t}\n\twg.Wait()\n}",
+    "highlight": "wg.Wait()",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Waits for the first task to finish",
+      "Cancels the tasks still running",
+      "Blocks until every Done matches an Add"
+    ],
+    "answer": 2,
+    "explanation": "WaitGroup is a counter: Add before starting, Done when finished, Wait to join; it is how you join goroutines, which have no handles."
+  },
+  {
+    "id": "cc-mutex",
+    "kind": "concurrency",
+    "title": "Mutex",
+    "code": "type Counter struct {\n\tmu sync.Mutex\n\tn  int\n}\n\nfunc (c *Counter) Inc() {\n\tc.mu.Lock()\n\tdefer c.mu.Unlock()\n\tc.n++\n}",
+    "highlight": "mu sync.Mutex",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A lock that must be initialized first",
+      "A lock protecting n, usable in its zero state",
+      "A read-only guard"
+    ],
+    "answer": 1,
+    "explanation": "The mutex is a field, not a wrapper around the data; its zero value is unlocked and ready, and the compiler does not enforce that n is only touched under it."
+  },
+  {
+    "id": "cc-context",
+    "kind": "concurrency",
+    "title": "context",
+    "code": "func (s *Server) Handle(ctx context.Context, req Request) error {\n\tif err := ctx.Err(); err != nil {\n\t\treturn err\n\t}\n\treturn s.process(req)\n}",
+    "highlight": "ctx context.Context",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A structured logger for the call",
+      "Carries cancellation and deadlines",
+      "The body of the incoming request"
+    ],
+    "answer": 1,
+    "explanation": "ctx is passed as the first parameter through every layer; ctx.Done() is a channel that closes on cancel, the closest thing to a cancellation token."
+  },
+  {
+    "id": "gn-func",
+    "kind": "generics",
+    "title": "Generic function",
+    "code": "func Map[T, U any](xs []T, f func(T) U) []U {\n\tout := make([]U, 0, len(xs))\n\tfor _, x := range xs {\n\t\tout = append(out, f(x))\n\t}\n\treturn out\n}",
+    "highlight": "[T, U any]",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A two-element array type",
+      "Two unconstrained type parameters",
+      "Two interface-typed parameters"
+    ],
+    "answer": 1,
+    "explanation": "Type parameters go in square brackets before the regular parameters; any means unconstrained, like <T, U>."
+  },
+  {
+    "id": "gn-infer",
+    "kind": "generics",
+    "title": "Type inference",
+    "code": "func main() {\n\tnames := Map(users, func(u User) string { return u.Name })\n\tfmt.Println(names)\n}",
+    "highlight": "Map(users, func(u User) string { return u.Name })",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Does not compile: T and U must be written",
+      "Calls Map with T and U inferred",
+      "Calls a method named Map on users"
+    ],
+    "answer": 1,
+    "explanation": "Type arguments are inferred from the values passed, so callers rarely write Map[User, string]."
+  },
+  {
+    "id": "gn-comparable",
+    "kind": "generics",
+    "title": "comparable",
+    "code": "func Keys[K comparable, V any](m map[K]V) []K {\n\tout := make([]K, 0, len(m))\n\tfor k := range m {\n\t\tout = append(out, k)\n\t}\n\treturn out\n}",
+    "highlight": "K comparable",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "K must implement a Compare method",
+      "K must be a number",
+      "K must support ==, as map keys must"
+    ],
+    "answer": 2,
+    "explanation": "comparable is the built-in constraint for types usable with == and as map keys, roughly Eq + Hash."
+  },
+  {
+    "id": "gn-constraint",
+    "kind": "generics",
+    "title": "Constraint interface",
+    "code": "type Number interface {\n\t~int | ~int64 | ~float64\n}\n\nfunc Sum[T Number](xs []T) T {\n\tvar s T\n\tfor _, x := range xs {\n\t\ts += x\n\t}\n\treturn s\n}",
+    "highlight": "~int | ~int64 | ~float64",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "Three method names the type must have",
+      "A bitwise or of three types",
+      "A union of allowed underlying types"
+    ],
+    "answer": 2,
+    "explanation": "A constraint may list types; ~int admits any type whose underlying type is int, so a defined type like Level still qualifies."
+  },
+  {
+    "id": "gn-type",
+    "kind": "generics",
+    "title": "Generic type",
+    "code": "type Stack[T any] struct {\n\titems []T\n}\n\nfunc (s *Stack[T]) Push(v T) {\n\ts.items = append(s.items, v)\n}",
+    "highlight": "Stack[T any]",
+    "question": "What is the highlighted part?",
+    "choices": [
+      "A stack whose elements are interfaces",
+      "A struct parameterized by an element type",
+      "An array of Stack"
+    ],
+    "answer": 1,
+    "explanation": "Types take parameters too, and methods repeat the parameter list on the receiver, Stack[T]; there are no generic methods beyond that."
+  }
+]

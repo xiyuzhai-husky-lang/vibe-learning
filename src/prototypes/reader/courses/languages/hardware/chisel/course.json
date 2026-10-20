@@ -1,0 +1,11 @@
+{
+  "id": "chisel",
+  "title": "Chisel",
+  "tagline": "Every Chisel feature, one snippet at a time.",
+  "language": "scala",
+  "related": [
+    "scala",
+    "systemverilog"
+  ],
+  "kinds": []
+}

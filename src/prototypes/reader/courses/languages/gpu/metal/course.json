@@ -1,0 +1,13 @@
+{
+  "id": "metal",
+  "title": "Metal Shading Language",
+  "tagline": "Every Metal Shading Language feature, one snippet at a time.",
+  "language": "metal",
+  "related": [
+    "cpp",
+    "cuda",
+    "wgsl",
+    "splash"
+  ],
+  "kinds": []
+}

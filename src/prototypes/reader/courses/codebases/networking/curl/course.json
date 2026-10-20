@@ -1,0 +1,11 @@
+{
+  "id": "curl",
+  "title": "curl",
+  "tagline": "The URL transfer library and tool, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/curl/curl",
+  "related": [
+    "c"
+  ],
+  "kinds": []
+}

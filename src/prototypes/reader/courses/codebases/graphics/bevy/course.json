@@ -1,0 +1,12 @@
+{
+  "id": "bevy",
+  "title": "Bevy",
+  "tagline": "The data-driven game engine, one snippet at a time.",
+  "language": "rust",
+  "source": "https://github.com/bevyengine/bevy",
+  "related": [
+    "rust",
+    "wgpu"
+  ],
+  "kinds": []
+}

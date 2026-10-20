@@ -1,0 +1,12 @@
+{
+  "id": "ppo",
+  "title": "Proximal policy optimization",
+  "tagline": "Clipped policy updates.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/1707.06347",
+  "related": [
+    "instructgpt",
+    "dpo"
+  ],
+  "kinds": []
+}

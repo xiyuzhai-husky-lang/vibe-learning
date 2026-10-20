@@ -1,0 +1,11 @@
+{
+  "id": "gshard",
+  "title": "GShard",
+  "tagline": "Sharded mixture of experts at scale.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2006.16668",
+  "related": [
+    "switch-transformer"
+  ],
+  "kinds": []
+}

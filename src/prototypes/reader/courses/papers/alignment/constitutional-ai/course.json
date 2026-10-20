@@ -1,0 +1,12 @@
+{
+  "id": "constitutional-ai",
+  "title": "Constitutional AI",
+  "tagline": "Feedback from principles instead of labels.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2212.08073",
+  "related": [
+    "instructgpt",
+    "dpo"
+  ],
+  "kinds": []
+}

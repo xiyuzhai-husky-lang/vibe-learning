@@ -1,0 +1,11 @@
+{
+  "id": "mixtral",
+  "title": "Mixtral of Experts",
+  "tagline": "A sparse open model, 8 experts, 2 active.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2401.04088",
+  "related": [
+    "switch-transformer"
+  ],
+  "kinds": []
+}

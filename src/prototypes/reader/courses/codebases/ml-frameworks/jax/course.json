@@ -1,0 +1,12 @@
+{
+  "id": "jax",
+  "title": "JAX",
+  "tagline": "Composable transformations of NumPy programs, one snippet at a time.",
+  "language": "python",
+  "source": "https://github.com/jax-ml/jax",
+  "related": [
+    "python",
+    "pytorch"
+  ],
+  "kinds": []
+}

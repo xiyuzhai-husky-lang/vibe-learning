@@ -1,0 +1,12 @@
+{
+  "id": "rustc",
+  "title": "rustc",
+  "tagline": "The Rust compiler, one snippet at a time.",
+  "language": "rust",
+  "source": "https://github.com/rust-lang/rust",
+  "related": [
+    "rust",
+    "llvm"
+  ],
+  "kinds": []
+}

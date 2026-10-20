@@ -1,0 +1,1074 @@
+[
+  {
+    "id": "map-two-processes",
+    "kind": "map",
+    "title": "Two processes",
+    "question": "A request arrives at /v1/chat/completions. Which process turns the chat messages into token ids?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/main.mm",
+      "server/frontend.py",
+      "server/server.py"
+    ],
+    "choices": [
+      "The launcher, which pre-tokenizes every request",
+      "The C++ engine, as its first step before the GPU",
+      "The Python server, before the engine sees it"
+    ],
+    "answer": 2,
+    "explanation": "Splash is a Python HTTP server plus a native engine child: the server owns the Hugging Face tokenizer, the chat templates and request shaping, so the engine only ever receives token ids and never carries a tokenizer or a Jinja renderer."
+  },
+  {
+    "id": "map-native-contents",
+    "kind": "map",
+    "title": "What the native part holds",
+    "question": "Splash has a Python part and a native C++/Objective-C++/Metal part. What does the native part contain?",
+    "files": [
+      "runtime/engine/KvCache.cpp",
+      "runtime/engine/Scheduler.cpp",
+      "runtime/metal/MetalBackend.mm",
+      "runtime/model/Runtime.cpp"
+    ],
+    "choices": [
+      "Scheduling, memory, model execution and kernels",
+      "Everything, HTTP routing and the chat page included",
+      "Only the Metal kernels; scheduling stays in Python"
+    ],
+    "answer": 0,
+    "explanation": "Everything latency-critical sits in one native loop: runtime/engine owns scheduling, admission and the KV and state caches, runtime/model runs the target, draft and vision, and runtime/ops and runtime/metal hold the kernels, while HTTP, the chat page and the APIs stay in Python."
+  },
+  {
+    "id": "map-launcher",
+    "kind": "map",
+    "title": "The launcher",
+    "question": "You type `splash serve --model X`. What is the first program that runs, and what does it do?",
+    "files": [
+      "install/launcher.py",
+      "server/serve_options.py",
+      "splash"
+    ],
+    "choices": [
+      "A launcher: check, install, then exec the server",
+      "The engine binary, which spawns the HTTP server",
+      "The HTTP server itself; it installs on its first request"
+    ],
+    "answer": 0,
+    "explanation": "install/launcher.py is a standard-library-only Python script that runs before the virtualenv exists: it takes the serve locks, checks the port, builds and installs what is missing, holds the model assembly, then replaces itself with python -m server.server."
+  },
+  {
+    "id": "map-scheduler-owner",
+    "kind": "map",
+    "title": "Who schedules",
+    "question": "Two requests arrive at once. Which component decides how they share the GPU?",
+    "files": [
+      "runtime/engine/Engine.cpp",
+      "runtime/engine/Scheduler.cpp",
+      "server/runtime.py"
+    ],
+    "choices": [
+      "The engine's own scheduler, written in C++",
+      "The Python server, which queues and orders them",
+      "macOS, through Metal's own command queue"
+    ],
+    "answer": 0,
+    "explanation": "The server only bounds how many requests are pending and writes them straight to the child; batching concurrent requests, lanes, priorities and prefill-versus-decode time slicing are the native scheduler's job, next to the memory it schedules against."
+  },
+  {
+    "id": "map-prefix-cache-owner",
+    "kind": "map",
+    "title": "Who holds the prefix cache",
+    "question": "A second conversation reuses the same long system prompt. Which process holds the cached KV that saves the prefill?",
+    "files": [
+      "runtime/engine/Cache.cpp",
+      "runtime/engine/KvPageTier.cpp",
+      "server/frontend.py"
+    ],
+    "choices": [
+      "The Python server, as a cache of token ids",
+      "The engine, in GPU memory and on SSD",
+      "The launcher's model directory on disk"
+    ],
+    "answer": 1,
+    "explanation": "KV pages and request states live beside the model in the engine, with an SSD tier that takes evicted copies when memory runs short; the server keeps only a small cache of tokenized history text, which changes no token ids and no GPU state."
+  },
+  {
+    "id": "map-model-rules-owner",
+    "kind": "map",
+    "title": "Who owns the model rules",
+    "question": "The installer decides whether a Hugging Face repository is a model Splash can serve. Whose rules does it apply?",
+    "files": [
+      "install/models.py",
+      "install/upstream.py",
+      "runtime/main.mm"
+    ],
+    "choices": [
+      "The Hub's, from the repository's tags and metadata",
+      "The engine's, by running its model-check command",
+      "Its own, from a list of supported repositories in Python"
+    ],
+    "answer": 1,
+    "explanation": "The Python installer owns downloads and assembly, but the engine owns what a loadable model is: it reads the family from the target's own configuration, and the installer pairs the DFlash2 draft by that family, so repository names play no part."
+  },
+  {
+    "id": "map-output-parsing-owner",
+    "kind": "map",
+    "title": "Who parses the output",
+    "question": "The model has emitted the tokens of a tool call. Which component turns them into the `tool_calls` JSON the client receives?",
+    "files": [
+      "server/backend.py",
+      "server/output.py",
+      "server/protocol.py"
+    ],
+    "choices": [
+      "The client agent, which parses the raw model text",
+      "The engine, which emits tool calls as structured events",
+      "The Python server, as the token events arrive"
+    ],
+    "answer": 2,
+    "explanation": "The engine's events carry token ids only; the server detokenizes them incrementally and one parser in output.py recognizes thinking, tool calls and structured output as text arrives, serving streamed and complete responses alike."
+  },
+  {
+    "id": "map-neural-engine",
+    "kind": "map",
+    "title": "The Neural Engine's role",
+    "question": "On the dense 27B model Splash hands part of the work to the Neural Engine. Prefill runs large fixed-size chunks; decode runs a few rows per step. Which phase uses it?",
+    "files": [
+      "runtime/ane/Program.mm",
+      "runtime/engine/AneFfnStartup.cpp",
+      "runtime/ops/AneFfn.cpp"
+    ],
+    "choices": [
+      "Prefill only; decode stays on the GPU",
+      "Decode only, to speed up token-by-token output",
+      "Both phases, with layers split between the two"
+    ],
+    "answer": 0,
+    "explanation": "Prefill chunks split each FFN by channel between the GPU and one fixed-shape W8A8 program on the Neural Engine, which suits its large fixed batches; MoE targets, the mixers and decode stay on the GPU, and startup decides the split before it sizes the KV cache."
+  },
+  {
+    "id": "boundaries-pipe-not-http",
+    "kind": "boundaries",
+    "title": "The server-engine pipe",
+    "question": "How does the Python server hand a request to the engine process?",
+    "files": [
+      "runtime/engine/FdTransport.cpp",
+      "runtime/main.mm",
+      "server/protocol.py",
+      "server/runtime.py"
+    ],
+    "choices": [
+      "Binary frames on the child's stdin and stdout",
+      "A shared file the engine polls for new requests",
+      "An HTTP call to a second port the engine listens on"
+    ],
+    "answer": 0,
+    "explanation": "The engine is a child process that speaks a versioned binary frame protocol over its inherited pipes and never opens a socket; the server is its only client and its supervisor, so there is no second network surface to secure."
+  },
+  {
+    "id": "boundaries-chat-text-never-crosses",
+    "kind": "boundaries",
+    "title": "What never crosses",
+    "question": "Of these, which never crosses the pipe between the server and the engine?",
+    "files": [
+      "runtime/engine/Protocol.hpp",
+      "server/frontend.py",
+      "server/protocol.py"
+    ],
+    "choices": [
+      "The token ids of the rendered prompt",
+      "The resized pixels of an attached image",
+      "The chat messages and tool schemas"
+    ],
+    "answer": 2,
+    "explanation": "A request frame carries token ids, sampling settings, image pixels and a few flags; rendering messages and tools into a prompt is finished in the server, so the engine has no notion of a message, a role or a tool."
+  },
+  {
+    "id": "boundaries-image-pixels",
+    "kind": "boundaries",
+    "title": "Images at the boundary",
+    "question": "A request attaches a base64 PNG. What does the engine receive for it?",
+    "files": [
+      "runtime/model/QwenVision.cpp",
+      "server/images.py",
+      "server/protocol.py"
+    ],
+    "choices": [
+      "Nothing; the server runs the vision tower itself",
+      "Resized RGB pixels inside the request frame",
+      "The base64 string, which the engine decodes on the GPU"
+    ],
+    "answer": 1,
+    "explanation": "Codec work is a CPU job the Python side does with ordinary image libraries, while the vision tower is GPU inference; the boundary is drawn at raw pixels, which is why a request frame may be hundreds of megabytes."
+  },
+  {
+    "id": "boundaries-mask-exchange",
+    "kind": "boundaries",
+    "title": "Grammar masks",
+    "question": "During constrained decoding the engine needs to know which tokens the grammar allows next. How does it find out?",
+    "files": [
+      "runtime/engine/Protocol.hpp",
+      "server/constraints.py",
+      "server/runtime.py"
+    ],
+    "choices": [
+      "It runs the grammar itself from a copy the server sent",
+      "It asks the server for a bitmask, with a timeout",
+      "It generates freely and the server rejects bad tokens after"
+    ],
+    "answer": 1,
+    "explanation": "The grammar engine lives in Python, so the engine sends a mask request and the server answers with a vocabulary bitmask computed on CPU threads; a mask left unanswered for five seconds fails only that request, so a stalled grammar cannot hold the batch's GPU command."
+  },
+  {
+    "id": "boundaries-api-converge",
+    "kind": "boundaries",
+    "title": "Two APIs, one engine",
+    "question": "Splash serves OpenAI-shaped and Anthropic-shaped requests on the same port. Where do the two shapes converge?",
+    "files": [
+      "server/api_shapes.py",
+      "server/frontend.py",
+      "server/server.py"
+    ],
+    "choices": [
+      "In the server, before the native request frame",
+      "In the engine, which has a handler per API",
+      "They never converge; each API has its own engine"
+    ],
+    "answer": 0,
+    "explanation": "Chat Completions, Responses and Messages are normalized into one internal request and one native frame, and their answers are built from the same output block sequence, so the engine never learns which API a request came from."
+  },
+  {
+    "id": "boundaries-structured-output",
+    "kind": "boundaries",
+    "title": "Structured output promise",
+    "question": "A request sets a JSON schema as its response format. How does Splash make the output conform?",
+    "files": [
+      "server/constraints.py",
+      "server/frontend.py",
+      "server/output.py"
+    ],
+    "choices": [
+      "By adding formatting instructions to the prompt",
+      "By retrying generation until the output validates",
+      "By masking disallowed tokens during generation"
+    ],
+    "answer": 2,
+    "explanation": "The API surface keeps the prompt exactly what the client sent: a schema is compiled into a token grammar enforced at every step and the final output is validated, with no hidden instructions injected."
+  },
+  {
+    "id": "boundaries-command-boundary",
+    "kind": "boundaries",
+    "title": "The GPU command boundary",
+    "question": "A client cancels a request while the GPU is in the middle of a decode command. When does the engine act on it?",
+    "files": [
+      "runtime/engine/Bootstrap.mm",
+      "runtime/engine/FdTransport.hpp",
+      "runtime/engine/MemoryControl.hpp"
+    ],
+    "choices": [
+      "Never mid-request; only after the request's final token",
+      "At the next command boundary, after the command drains",
+      "Immediately, by aborting the GPU command in flight"
+    ],
+    "answer": 1,
+    "explanation": "A Metal command runs to completion, so the engine's loop reads input while one is in flight and applies control at command-free points, where provisional writes commit; cancellation, memory pressure and weight release all take effect there."
+  },
+  {
+    "id": "boundaries-launcher-needs-server",
+    "kind": "boundaries",
+    "title": "Agent launch boundary",
+    "question": "You run `splash claude` while no Splash server is running. What happens?",
+    "files": [
+      "install/clients.py",
+      "install/launcher.py"
+    ],
+    "choices": [
+      "It fails and tells you to start splash serve first",
+      "It starts a server in the background, then Claude Code",
+      "It starts Claude Code, which waits for a server to appear"
+    ],
+    "answer": 0,
+    "explanation": "The agent launchers are thin configurators: they probe /v1/models on the running server for the served model id and context, write the client's configuration, and exec the client, so serving stays a foreground process the user owns."
+  },
+  {
+    "id": "flows-request-life",
+    "kind": "flows",
+    "title": "Life of a request",
+    "question": "In order, what happens to a streaming chat request from HTTP arrival to the text the client reads?",
+    "files": [
+      "runtime/engine/Engine.cpp",
+      "server/backend.py",
+      "server/frontend.py"
+    ],
+    "choices": [
+      "Server renders the template; engine tokenizes and streams",
+      "Engine tokenizes and generates; server forwards the bytes",
+      "Server tokenizes, engine generates, server streams text"
+    ],
+    "answer": 2,
+    "explanation": "The server renders the chat template and tokenizes, sends one request frame, receives Start, Tokens and Done events, and detokenizes each token batch into server-sent events, so text exists only at the two ends of the pipe."
+  },
+  {
+    "id": "flows-bind-before-load",
+    "kind": "flows",
+    "title": "Bind before loading",
+    "question": "On startup the server binds its port before loading the tokenizer or starting the engine, but accepts connections only later. Why bind that early?",
+    "files": [
+      "install/launcher.py",
+      "server/server.py"
+    ],
+    "choices": [
+      "So the port is reserved for the engine child process",
+      "So clients can be served while the model loads",
+      "So a duplicate server fails fast, before the load"
+    ],
+    "answer": 2,
+    "explanation": "A port conflict is cheap to detect and expensive to discover after a multi-minute weight load, so the listener is bound first and activated only once the engine is Ready, keeping a half-started service from receiving requests."
+  },
+  {
+    "id": "flows-ready-event",
+    "kind": "flows",
+    "title": "What Ready means",
+    "question": "The server opens its listener to clients only after the engine sends its Ready event. What has the engine done by then?",
+    "files": [
+      "runtime/engine/Bootstrap.mm",
+      "server/protocol.py",
+      "server/runtime.py"
+    ],
+    "choices": [
+      "Loaded weights only; warmup runs on the first request",
+      "Loaded weights, run warmup, and announced its limits",
+      "Mapped the weight files; they load on first use"
+    ],
+    "answer": 1,
+    "explanation": "Bootstrap loads the model, runs the largest prefill and each decode batch width as warmup, audits memory, and only then announces Ready with the context limit, concurrency and vision flag the server adopts, so the first request pays no hidden setup."
+  },
+  {
+    "id": "flows-install-order",
+    "kind": "flows",
+    "title": "Install order",
+    "question": "First `splash serve` on a fresh source checkout. In what order do the platform check, the engine build, the engine's model check and the weight download happen?",
+    "files": [
+      "Makefile",
+      "install/launcher.py",
+      "install/upstream.py"
+    ],
+    "choices": [
+      "Platform check, build, engine checks the model, then download",
+      "Build, download, then the engine checks the loaded model",
+      "Download first, so the build can validate against real weights"
+    ],
+    "answer": 0,
+    "explanation": "The engine is built first because it holds the device and model rules: its device-check and model-check run on metadata alone, so an unsupported Mac or an incompatible model is refused before tens of gigabytes are downloaded."
+  },
+  {
+    "id": "flows-weight-load",
+    "kind": "flows",
+    "title": "Model load",
+    "question": "Each start reads every weight file and writes it into memory in the kernels' layout. What cost does Splash accept for that?",
+    "files": [
+      "README.md",
+      "runtime/model/WeightImages.hpp",
+      "runtime/model/WeightSource.cpp"
+    ],
+    "choices": [
+      "Each start reads the whole model from disk",
+      "Weights page in lazily, slowing the first token",
+      "A converted copy of the model kept on disk"
+    ],
+    "answer": 0,
+    "explanation": "Instead of mmapping source files, loaders write weight images into Metal buffers in the exact layout the kernels read, reading sources uncached so the page cache holds no second copy; the load costs about one disk read of the model and a model that cannot fit is refused before it starts."
+  },
+  {
+    "id": "flows-speculative-cycle",
+    "kind": "flows",
+    "title": "The decode cycle",
+    "question": "Splash decodes with a DFlash2 draft beside the target model. What happens in one decode cycle?",
+    "files": [
+      "runtime/engine/Engine.cpp",
+      "runtime/model/DFlashDraft.hpp",
+      "runtime/ops/Sampling.hpp"
+    ],
+    "choices": [
+      "Draft and target each emit a token and the engine picks one",
+      "Draft proposes a block, target verifies it in one pass",
+      "Target emits one token; the draft is used only for prefill"
+    ],
+    "answer": 1,
+    "explanation": "The draft proposes up to seven tokens, the target scores all of them in a single forward, and acceptance keeps the agreeing prefix plus one target token, so each cycle yields one plus the accepted count while the output stays the target's own."
+  },
+  {
+    "id": "state-what-is-kept",
+    "kind": "state",
+    "title": "What the engine keeps",
+    "question": "A request finishes and its lane is freed. What does the engine keep from it so a later request can skip work?",
+    "files": [
+      "runtime/engine/Cache.hpp",
+      "runtime/engine/KvCache.hpp",
+      "runtime/engine/StateCache.hpp"
+    ],
+    "choices": [
+      "Only the reply text, to answer repeated prompts fast",
+      "Nothing: every request recomputes its whole prompt",
+      "KV pages, plus recurrent states at a few points"
+    ],
+    "answer": 2,
+    "explanation": "The Cache owns a content-addressed graph of KV pages and, attached to a few of those pages, composite states (the GDN cell and the draft's context window); both can sit in RAM or on the SSD, so the next request over the same prefix restores instead of recomputing."
+  },
+  {
+    "id": "state-content-addressed",
+    "kind": "state",
+    "title": "What names a cached page",
+    "question": "Two different chats start with the same 200-token system prompt. Does the second one reuse the first one's KV cache, and what decides that?",
+    "files": [
+      "runtime/engine/KvCache.hpp",
+      "runtime/engine/Types.hpp"
+    ],
+    "choices": [
+      "Yes: pages are keyed by exact tokens and parent",
+      "Only if the second chat arrives before the first ends",
+      "No: a cache entry belongs to the request that made it"
+    ],
+    "answer": 0,
+    "explanation": "A page is named by its parent page, its exact tokens and its identity (images and an optional cache salt), never by the request, so any prompt that walks the same chain from the root matches it; the salt exists precisely so that clients who must not share can opt out."
+  },
+  {
+    "id": "state-hybrid-needs-state",
+    "kind": "state",
+    "title": "KV alone is not enough",
+    "question": "Both supported families mix attention layers with linear-attention (GDN) layers. A new prompt's first 4,000 tokens match cached KV pages exactly, but no recurrent state is cached there. Where does its prefill resume?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/engine/Cache.hpp",
+      "runtime/engine/StateCache.hpp"
+    ],
+    "choices": [
+      "From the newest cached recurrent state before it",
+      "From token 4,000: the matched KV is enough",
+      "From token 4,000, recomputing only the GDN layers"
+    ],
+    "answer": 0,
+    "explanation": "GDN layers carry a recurrent cell that no KV page holds, so a request can only resume where a composite state is cached; KV matched beyond that point is still reused, but only by swapping the recomputed pages for the cached ones after the command."
+  },
+  {
+    "id": "state-draft-window",
+    "kind": "state",
+    "title": "What the draft keeps",
+    "question": "DFlash drafting keeps per-lane attention rings over the last 2,048 positions. When a prompt's state is cached, are those rings saved with it?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/model/DFlashDraft.hpp"
+    ],
+    "choices": [
+      "Yes: the rings are copied into the cache as they are",
+      "No: the draft restarts with no context after a restore",
+      "No: only the context rows they derive from are kept"
+    ],
+    "answer": 2,
+    "explanation": "The rings are tens of MiB per lane but every layer's keys and values derive from one small window of context rows, so a cached state keeps the window and a restore recomputes the rings at the start of its first prefill chunk."
+  },
+  {
+    "id": "state-lane",
+    "kind": "state",
+    "title": "What a lane is",
+    "question": "Splash decodes at most four requests in one command. What does each running request hold that this limit counts?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/engine/MemoryPlan.hpp",
+      "runtime/model/Model.hpp"
+    ],
+    "choices": [
+      "A private copy of the model's attention weight images",
+      "A Metal command queue of its own, reserved for it",
+      "A lane: its own recurrent-state and draft buffers"
+    ],
+    "answer": 2,
+    "explanation": "Attention KV lives in shared pages, but the GDN cell and the draft rings are per-lane buffers the model owns; the batch is at most four lanes wide, and when every lane is taken a lower-priority resident is suspended to free one."
+  },
+  {
+    "id": "state-replay-point",
+    "kind": "state",
+    "title": "Where a chat resumes",
+    "question": "A chat turn's prompt ends with the template's generation prompt that opens the reply. Where does Splash keep the state the next turn resumes from?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/engine/Engine.hpp",
+      "runtime/engine/Types.hpp"
+    ],
+    "choices": [
+      "At the end of the reply, so the next turn continues it",
+      "At the last whole page before the generation prompt",
+      "At the very end of the prompt, generation prompt included"
+    ],
+    "answer": 1,
+    "explanation": "The next turn renders the generation prompt differently and appends the reply, so the replay point sits on the last whole 32-token page before it; states are captured only in prefill, and that point stays in use until the request ends."
+  },
+  {
+    "id": "state-memory-budget",
+    "kind": "state",
+    "title": "Who sets the budget",
+    "question": "How is the engine's Metal memory budget fixed at start, and what can --max-memory do to it?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/engine/MemoryGovernor.hpp",
+      "runtime/engine/MemoryPlan.hpp"
+    ],
+    "choices": [
+      "Metal's recommended working set; the flag only lowers it",
+      "Half of unified memory; the flag may raise or lower it",
+      "All free memory at startup; the flag reserves the remainder"
+    ],
+    "answer": 0,
+    "explanation": "MemoryPlan takes the GPU's recommended working set less a small margin, places the weights and fixed reserves in it, and leaves one dynamic budget that lanes, cached states and KV extents all grow from; the MemoryGovernor is the single ledger every allocation reserves against."
+  },
+  {
+    "id": "state-host-margin",
+    "kind": "state",
+    "title": "Room for other apps",
+    "question": "Other applications on the Mac start running low on memory while Splash is serving. What does the engine do with its caches?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/engine/MemoryControl.hpp",
+      "runtime/engine/MemoryGovernor.hpp"
+    ],
+    "choices": [
+      "Nothing: Metal memory was fixed by the budget at startup",
+      "Suspends every request until macOS reports normal pressure again",
+      "Gives cache back in paced passes; live requests still grow"
+    ],
+    "answer": 2,
+    "explanation": "Cache growth is optional, so it stops and paced reclaim returns it whenever the host's spare memory falls under a reserve or macOS warns, but a request in service keeps taking what it needs within the budget, short of critical pressure, because stranding it would waste the memory it already holds."
+  },
+  {
+    "id": "state-eviction-order",
+    "kind": "state",
+    "title": "What goes first",
+    "question": "Memory runs short while several chats are live. What does the cache give up first?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/engine/Cache.hpp",
+      "runtime/engine/StateCache.hpp"
+    ],
+    "choices": [
+      "The states live conversations will resume from",
+      "The oldest cached prefix, whoever may still need it",
+      "Disposable progress checkpoints of long prefills"
+    ],
+    "answer": 2,
+    "explanation": "Victims come in classes: rolling checkpoints first, then ordinary states and KV (KV no state restores through goes before KV that does), and last the replay points unfinished requests will resume from, which only running work may take once nothing else is left."
+  },
+  {
+    "id": "state-ssd-tier",
+    "kind": "state",
+    "title": "What the SSD holds",
+    "question": "With the SSD cache on, when does a cached prefix get written to disk?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/engine/KvPageTier.hpp",
+      "runtime/engine/StateCache.hpp"
+    ],
+    "choices": [
+      "When RAM reclaim evicts it, instead of dropping it",
+      "Only at a clean shutdown, so it survives the restart",
+      "As soon as it is computed, as a write-through cache"
+    ],
+    "answer": 0,
+    "explanation": "The SSD tier is an eviction target that takes no Metal memory: evicted states and the KV pages a state needs are written on the file's IO worker beside running commands, and a later matching request reads them back instead of recomputing; it never raises the context limit."
+  },
+  {
+    "id": "state-persistent-points",
+    "kind": "state",
+    "title": "What survives a restart",
+    "question": "With --persistent-cache on, what survives a restart or crash of the server?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/engine/Cache.hpp",
+      "runtime/engine/WriteBehind.hpp"
+    ],
+    "choices": [
+      "Everything that was in RAM, written out at shutdown",
+      "Each chat's newest restore point and its KV chain",
+      "Only the weights' converted images, to load faster"
+    ],
+    "answer": 1,
+    "explanation": "WriteBehind writes a conversation's newest restore point 10 s after it is published while the RAM copy stays, so a crash costs at most the latest turns; the next start takes back every point whose chain is whole, and the cache namespace digests the model and layouts so no model reads another's."
+  },
+  {
+    "id": "invariants-one-command",
+    "kind": "invariants",
+    "title": "One command in flight",
+    "question": "How many GPU commands does the engine keep submitted but not yet retired at any moment?",
+    "files": [
+      "runtime/engine/Engine.hpp",
+      "runtime/engine/NativeRuntime.hpp",
+      "runtime/metal/MetalBackend.hpp"
+    ],
+    "choices": [
+      "One per lane, so up to four during a full batch",
+      "Exactly one, planned once the last retired",
+      "As many as the queue takes, for throughput"
+    ],
+    "answer": 1,
+    "explanation": "With one command in flight the engine replans between commands, which is the only time memory reclaim, page moves, state capture and admission run; nothing can alias memory a command is still writing, and the whole engine stays single-threaded."
+  },
+  {
+    "id": "invariants-weights-in-buffers",
+    "kind": "invariants",
+    "title": "Weights are written, not mapped",
+    "question": "A 4-bit GGUF is 16 GB on disk. How do its weights reach the GPU: by mapping the file into memory, or by copying it?",
+    "files": [
+      "README.md",
+      "runtime/model/WeightImages.hpp",
+      "runtime/model/WeightSource.hpp"
+    ],
+    "choices": [
+      "The file is mmapped and the GPU reads it in place",
+      "Converted and written into Metal buffers each start",
+      "Converted once into a cache file on disk, then mmapped"
+    ],
+    "answer": 1,
+    "explanation": "The kernels read their own layouts, so loading converts each tensor as it reads it and writes it into a resident buffer with no copy on disk; the same path lets the engine release the weights while idle and write them again from the still-open sources."
+  },
+  {
+    "id": "invariants-prefill-decode-apart",
+    "kind": "invariants",
+    "title": "Prefill and decode apart",
+    "question": "A long prompt is prefilling while another user streams a reply. Can one GPU command carry both?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/engine/Scheduler.cpp",
+      "runtime/engine/Scheduler.hpp"
+    ],
+    "choices": [
+      "Yes: both are matmuls over the same weight images",
+      "No: decode waits until every prefill is done",
+      "No: they alternate, and prefill owes decode time"
+    ],
+    "answer": 2,
+    "explanation": "The two kinds run different Metal graphs, so a prefill slice is bounded to about 500 ms under contention and each slice adds a decode-share debt that equal-priority decode commands work off before the next slice, keeping streams alive through a long prompt."
+  },
+  {
+    "id": "invariants-shortest-first",
+    "kind": "invariants",
+    "title": "Shortest prompt first",
+    "question": "Three prompts of 500, 5,000 and 50,000 tokens arrive together. Which one prefills first?",
+    "files": [
+      "runtime/engine/Scheduler.cpp",
+      "runtime/engine/Scheduler.hpp"
+    ],
+    "choices": [
+      "Whichever arrived first, strictly in order",
+      "The 50,000-token one, so the big job starts early",
+      "The 500-token one: shortest remaining first"
+    ],
+    "answer": 2,
+    "explanation": "Prefill cost is linear, so serving the shortest remaining prompt first minimises the sum of first-token latencies; a bound on how many commands a lane may be overtaken keeps a long prompt from starving."
+  },
+  {
+    "id": "invariants-admission-refuses",
+    "kind": "invariants",
+    "title": "Admission refuses",
+    "question": "A request needs KV pages and the budget is at its limit. Does the memory governor block the caller until memory frees up?",
+    "files": [
+      "runtime/engine/Engine.hpp",
+      "runtime/engine/MemoryGovernor.hpp",
+      "runtime/metal/MetalBackend.hpp"
+    ],
+    "choices": [
+      "No: refused with a cause; the engine decides",
+      "Yes: it blocks until another request releases a page",
+      "Yes, up to a timeout, after which the request fails"
+    ],
+    "answer": 0,
+    "explanation": "The governor is a single-threaded ledger that hands out a reservation or a refusal naming its cause (engine budget or host pressure); the engine, between commands, decides whether to reclaim cache, suspend a lane, or let the request wait up to its resource limit."
+  },
+  {
+    "id": "invariants-exact-speculation",
+    "kind": "invariants",
+    "title": "Speculation is exact",
+    "question": "DFlash drafts several tokens per step and the target verifies them. Does speculative decoding change what the model would have sampled without a draft?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/metal/kernels/decode/sampling.metal",
+      "runtime/ops/Sampling.hpp"
+    ],
+    "choices": [
+      "No: acceptance is exact, the output is unchanged",
+      "Yes, but only when sampling with temperature above zero",
+      "Slightly: accepted tokens follow the draft's distribution"
+    ],
+    "answer": 0,
+    "explanation": "A draft token with draft probability q and target probability p is kept with probability min(1, p/q) and a rejection draws from the residual target-minus-draft distribution; penalties and the min-p, top-k and top-p cuts are applied to the target row before acceptance reads it, so the output matches plain sampling."
+  },
+  {
+    "id": "invariants-page-unit",
+    "kind": "invariants",
+    "title": "Pages are the unit",
+    "question": "Two prompts share a 1,000-token prefix and then differ. At what granularity does the cache share between them?",
+    "files": [
+      "runtime/engine/KvCache.hpp",
+      "runtime/metal/abi/ExecutionGeometry.h",
+      "runtime/ops/PagedKv.hpp"
+    ],
+    "choices": [
+      "Token by token: all 1,000 shared tokens are reused as is",
+      "Whole 32-token pages: 31 here, the rest recomputed",
+      "Whole prompts only: a partial prefix is not shared"
+    ],
+    "answer": 1,
+    "explanation": "A page of 32 tokens is the unit of KV memory, of hashing and of sharing: prompts form a tree of pages from the root, so sharing is cheap to find and a page can serve any number of requests, at the cost of recomputing the partial page at the end of a shared prefix."
+  },
+  {
+    "id": "invariants-resident",
+    "kind": "invariants",
+    "title": "Buffers stay resident",
+    "question": "Between requests the engine's buffers sit idle. Can macOS compress or page them out while the engine is running?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/metal/MetalBackend.hpp",
+      "runtime/metal/Residency.hpp"
+    ],
+    "choices": [
+      "No: they stay wired until the engine releases them",
+      "Yes, except the weights, which the engine pins at load",
+      "Yes: idle buffers are evicted like any process memory"
+    ],
+    "answer": 0,
+    "explanation": "Metal wires a buffer only while a command uses it, so under pressure macOS could compress idle KV or state and the next request would stall; one residency set keeps every buffer wired, and memory returns to macOS only when the engine chooses, through idle release or reclaim."
+  },
+  {
+    "id": "invariants-failure-boundary",
+    "kind": "invariants",
+    "title": "Who a failure takes down",
+    "question": "In a four-lane batch, one request's forward pass produces NaN logits. What happens?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/engine/Engine.hpp",
+      "runtime/engine/NativeRuntime.hpp"
+    ],
+    "choices": [
+      "That request fails; the other three finish",
+      "The engine is marked unhealthy and restarted",
+      "The whole batch fails and is retried without it"
+    ],
+    "answer": 0,
+    "explanation": "A non-finite row is a per-request failure reported before the failing step publishes any cache state, so the batch and the cache stay sound; only GPU faults and broken engine invariants are fatal and restart the engine."
+  },
+  {
+    "id": "failure-503-vs-500",
+    "kind": "failure",
+    "title": "503 versus 500",
+    "question": "A client gets HTTP 503 with a Retry-After header from a running Splash. What happened?",
+    "files": [
+      "DEVELOPMENT.md",
+      "server/backend.py",
+      "server/errors.py"
+    ],
+    "choices": [
+      "The engine has failed for good until the server restarts",
+      "The request was rejected as malformed; fix and resend",
+      "A transient condition; retrying shortly should work"
+    ],
+    "answer": 2,
+    "explanation": "Every 503 (overloaded, engine recovering, memory wait, shutting down) is one the server expects to clear by itself, so it carries Retry-After; a 500 engine_failed means Splash gave up restarting the engine and only a server restart helps."
+  },
+  {
+    "id": "failure-who-restarts-engine",
+    "kind": "failure",
+    "title": "Who restarts the engine",
+    "question": "The native engine process crashes while serving. Who brings it back?",
+    "files": [
+      "server/backend.py",
+      "server/runtime.py"
+    ],
+    "choices": [
+      "The Python server respawns it at once",
+      "Nothing; the operator must restart splash serve",
+      "launchd restarts the whole splash serve command"
+    ],
+    "answer": 0,
+    "explanation": "The server owns the engine as a child process it speaks to over pipes, so it is the supervisor: it notices the failure, relaunches the engine and keeps answering HTTP (with 503 engine_recovering) meanwhile."
+  },
+  {
+    "id": "failure-crash-loop",
+    "kind": "failure",
+    "title": "Crash loop",
+    "question": "The engine crashes again shortly after each restart. What does Splash do eventually?",
+    "files": [
+      "DEVELOPMENT.md",
+      "server/backend.py"
+    ],
+    "choices": [
+      "Keeps restarting forever with an ever-growing backoff delay",
+      "Stops restarting; requests get 500 until a server restart",
+      "Exits the whole server so a supervisor can restart it"
+    ],
+    "answer": 1,
+    "explanation": "A failure that recurs within a minute of starting is treated as a deterministic bug, not bad luck: after a few in a row the server stops relaunching and reports engine_failed, since endless restarts would only churn GPU memory and hide the cause."
+  },
+  {
+    "id": "failure-inflight-on-crash",
+    "kind": "failure",
+    "title": "In-flight requests on crash",
+    "question": "The engine dies with ten requests mid-generation. What happens to those ten?",
+    "files": [
+      "server/backend.py",
+      "server/runtime.py"
+    ],
+    "choices": [
+      "All ten fail now; clients must resend",
+      "They are replayed on the restarted engine",
+      "They pause and resume where output stopped"
+    ],
+    "answer": 0,
+    "explanation": "The engine holds every request's lane state in GPU memory, so when it dies that state is gone; the server fails every pending call with a retryable 503 rather than silently replaying prompts that may already have streamed partial output."
+  },
+  {
+    "id": "failure-client-disconnect",
+    "kind": "failure",
+    "title": "Client disconnect",
+    "question": "A client closes its connection while its response is still streaming. What does Splash do with the generation?",
+    "files": [
+      "server/backend.py",
+      "server/server.py"
+    ],
+    "choices": [
+      "Cancels it in the engine right away",
+      "Finishes it so the KV cache stays warm",
+      "Keeps it running until its timeout passes"
+    ],
+    "answer": 0,
+    "explanation": "GPU time on one Mac is the scarce resource, so the HTTP handler polls the socket and sends a cancel frame as soon as the peer is gone; the lane is freed for other requests instead of decoding output nobody will read."
+  },
+  {
+    "id": "failure-timeout-precedence",
+    "kind": "failure",
+    "title": "Timeout precedence",
+    "question": "The server runs with --request-timeout 5m and a request asks for timeout 3600. How long may it run?",
+    "files": [
+      "DEVELOPMENT.md",
+      "server/frontend.py",
+      "server/serve_options.py"
+    ],
+    "choices": [
+      "An hour; the request's own field overrides the server's",
+      "Neither; conflicting timeouts get a 400 refusal",
+      "Five minutes; a request can only shorten the limit"
+    ],
+    "answer": 2,
+    "explanation": "The operator's limit protects the shared GPU from any one client, so a request's timeout can only tighten it; with no server limit set there is no deadline at all, and only a disconnect or the context ends a request."
+  },
+  {
+    "id": "failure-stuck-gpu-command",
+    "kind": "failure",
+    "title": "Stuck GPU command",
+    "question": "A Metal command never completes because the GPU driver hangs. What does the command watchdog do?",
+    "files": [
+      "runtime/engine/Engine.cpp",
+      "runtime/metal/CommandWatchdog.hpp",
+      "runtime/metal/MetalBackend.mm"
+    ],
+    "choices": [
+      "Cancels only the request whose command is stuck",
+      "Resubmits the same command and waits once more",
+      "Fails the whole engine; the server restarts it"
+    ],
+    "answer": 2,
+    "explanation": "A command that outlives its timeout means the GPU queue itself is wedged, which no single request can be blamed for; the backend marks itself unhealthy, the engine exits, and the server's restart policy takes over."
+  },
+  {
+    "id": "failure-idle-release",
+    "kind": "failure",
+    "title": "Idle release",
+    "question": "After a quiet night, the first morning request takes far longer before its first token. Why?",
+    "files": [
+      "DEVELOPMENT.md",
+      "runtime/engine/NativeRuntime.cpp",
+      "server/serve_options.py"
+    ],
+    "choices": [
+      "The engine was restarted overnight and warmed up again",
+      "Idle release freed the weights; they reload from disk",
+      "The prefix cache was flushed and the prompt is recomputed"
+    ],
+    "answer": 1,
+    "explanation": "A personal Mac is shared with other applications, so after ten idle minutes the engine gives back the weights' memory and keeps its caches; the next request pays roughly a model load before it is served."
+  },
+  {
+    "id": "failure-refused-macs",
+    "kind": "failure",
+    "title": "Which Macs are refused",
+    "question": "Someone runs splash serve on an M2 Mac. When is it refused?",
+    "files": [
+      "install/launcher.py",
+      "runtime/metal/DeviceCapabilities.cpp"
+    ],
+    "choices": [
+      "At the first request, when a kernel fails to compile",
+      "After the download, when the engine first opens Metal",
+      "Right away, before any model file is downloaded"
+    ],
+    "answer": 2,
+    "explanation": "The kernels need Apple GPU family 9 (M3 or later) and a recent macOS, and the launcher asks the engine's own device check first so a refused Mac never downloads tens of gigabytes it cannot use."
+  },
+  {
+    "id": "failure-queue-size-tradeoff",
+    "kind": "failure",
+    "title": "Queue size trade-off",
+    "question": "Under heavy load clients see 503 frontend_overloaded. What does raising --queue-size trade?",
+    "files": [
+      "DEVELOPMENT.md",
+      "server/serve_options.py",
+      "server/server.py"
+    ],
+    "choices": [
+      "More concurrent decoding lanes at the cost of memory",
+      "Fewer refusals, longer waits; throughput unchanged",
+      "Larger request bodies at the cost of input memory"
+    ],
+    "answer": 1,
+    "explanation": "The queue bounds requests the server holds, running or waiting; the engine's lane count and memory plan fix how many actually decode, so a bigger queue only lets more clients wait instead of being told to retry."
+  },
+  {
+    "id": "change-new-http-route",
+    "kind": "change",
+    "title": "A new HTTP route",
+    "question": "You add a new HTTP endpoint that reports the server's version. What has to change?",
+    "files": [
+      "DEVELOPMENT.md",
+      "server/server.py"
+    ],
+    "choices": [
+      "The server plus the engine's frame protocol version",
+      "The engine, which owns every request handler",
+      "Only the server; the engine never sees HTTP"
+    ],
+    "answer": 2,
+    "explanation": "HTTP, API shapes and routing live entirely in server/server.py; the engine speaks a binary frame protocol over pipes and only changes when a route needs new engine behaviour."
+  },
+  {
+    "id": "change-chat-template-quirk",
+    "kind": "change",
+    "title": "Chat template quirk",
+    "question": "A model's new chat template writes tool-call tags differently and tool calls stop parsing. Which component?",
+    "files": [
+      "server/chat_templates.py",
+      "server/output.py",
+      "server/tool_schema.py"
+    ],
+    "choices": [
+      "The engine's sampler, which emits tool tokens",
+      "The Metal kernels that decode the model",
+      "The server's template and output parsing"
+    ],
+    "answer": 2,
+    "explanation": "The engine only produces tokens; rendering the prompt from the template and reading tool calls back out of the text are server concerns (chat_templates.py, tool_schema.py, output.py), so a template quirk never reaches the runtime."
+  },
+  {
+    "id": "change-request-priority",
+    "kind": "change",
+    "title": "Request prioritization",
+    "question": "You want a foreground request to preempt a running background one sooner. Where does that change go?",
+    "files": [
+      "runtime/engine/Scheduler.cpp",
+      "runtime/engine/Scheduler.hpp",
+      "runtime/engine/Types.hpp"
+    ],
+    "choices": [
+      "The HTTP layer's connection slot table",
+      "The server's admission queue, written in Python",
+      "The engine scheduler, which owns lanes"
+    ],
+    "answer": 2,
+    "explanation": "Preemption means suspending a lane and giving its memory to another, which only the engine can do; the server merely carries the priority byte on the request frame."
+  },
+  {
+    "id": "change-new-sampling-parameter",
+    "kind": "change",
+    "title": "A new sampling parameter",
+    "question": "You add a new sampling parameter such as typical_p. Which layers change?",
+    "files": [
+      "runtime/engine/Protocol.hpp",
+      "runtime/ops/Sampling.hpp",
+      "server/protocol.py"
+    ],
+    "choices": [
+      "Only the server, which resamples the engine's raw logits",
+      "Server API, the wire frame on both sides, engine sampler",
+      "Only the engine; the server forwards the JSON body untouched"
+    ],
+    "answer": 1,
+    "explanation": "Sampling runs on the GPU inside the engine, and the server validates fields and encodes them into a fixed-layout request frame, so a new field crosses the API, the protocol on both sides (with its golden bytes) and the engine's sampling code."
+  },
+  {
+    "id": "change-new-quantization-format",
+    "kind": "change",
+    "title": "A new quantization format",
+    "question": "A publisher ships GGUFs in a block format Splash does not read yet. Where does support go?",
+    "files": [
+      "runtime/metal/abi/QuantFormat.h",
+      "runtime/model/GgufPreparation.cpp",
+      "runtime/ops/LinearGguf.cpp"
+    ],
+    "choices": [
+      "A new DFlash draft trained for that quantization",
+      "The server, which dequantizes before sending to the engine",
+      "The runtime's weight loader and the Metal kernels"
+    ],
+    "answer": 2,
+    "explanation": "Weights are repacked at load into the layouts the kernels read and decoded on the GPU, so a format is a loader-plus-kernel concern in runtime/; the server never touches weights and the draft is per family, not per quantization."
+  },
+  {
+    "id": "change-new-model-family",
+    "kind": "change",
+    "title": "A new model family",
+    "question": "Serving a new model family such as a Llama variant: what must exist before it can run?",
+    "files": [
+      "install/families.py",
+      "runtime/model/ModelFactory.hpp",
+      "runtime/model/Qwen3_8.hpp"
+    ],
+    "choices": [
+      "Just its weights on the Hub, since the loader is generic",
+      "A runtime model layout, its kernels and a trained draft",
+      "Its chat template and tokenizer files in the Hub repository"
+    ],
+    "answer": 1,
+    "explanation": "Splash is built around the model: each family has a target layout in runtime/model, Metal kernels for its shapes and a DFlash2 draft trained for it, which the installer's family table pairs with the target."
+  },
+  {
+    "id": "change-cache-between-turns",
+    "kind": "change",
+    "title": "Caching between turns",
+    "question": "Agents resend the same long conversation every turn. Where would you cache more to cut prefill?",
+    "files": [
+      "runtime/engine/Cache.hpp",
+      "runtime/engine/KvCache.hpp",
+      "runtime/engine/StateCache.hpp"
+    ],
+    "choices": [
+      "The engine's state and KV cache",
+      "The server's stored Responses history",
+      "The server's chat template renderer"
+    ],
+    "answer": 0,
+    "explanation": "Prefix reuse is model state (KV pages and recurrent states) that lives in the engine's cache and its SSD tier; the server keeps only a small tokenizer cache and knows nothing about GPU memory."
+  },
+  {
+    "id": "change-model-support-check",
+    "kind": "change",
+    "title": "Who decides model support",
+    "question": "The installer must refuse an unsupported model before downloading gigabytes. How does it know what the engine accepts?",
+    "files": [
+      "install/models.py",
+      "install/upstream.py",
+      "runtime/model/ModelDescriptor.mm"
+    ],
+    "choices": [
+      "It runs the engine's own check on the model's config",
+      "It asks the Hugging Face Hub which engines support it",
+      "It maintains a Python copy of the engine's loading rules"
+    ],
+    "answer": 0,
+    "explanation": "One rule set lives in the engine (model-check); the installer invokes it on the configuration it fetches first, so supporting a new model never needs the Python installer to mirror C++ logic."
+  }
+]

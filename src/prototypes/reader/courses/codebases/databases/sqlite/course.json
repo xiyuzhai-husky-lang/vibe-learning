@@ -1,0 +1,13 @@
+{
+  "id": "sqlite",
+  "title": "SQLite",
+  "tagline": "The embedded SQL database, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/sqlite/sqlite",
+  "related": [
+    "c",
+    "sql",
+    "duckdb"
+  ],
+  "kinds": []
+}

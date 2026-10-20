@@ -1,0 +1,11 @@
+{
+  "id": "clojure",
+  "title": "Clojure",
+  "tagline": "Every Clojure feature, one snippet at a time.",
+  "language": "clojure",
+  "related": [
+    "racket",
+    "java"
+  ],
+  "kinds": []
+}

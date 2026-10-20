@@ -1,0 +1,12 @@
+{
+  "id": "typescript",
+  "title": "TypeScript",
+  "tagline": "Every TypeScript feature, one snippet at a time.",
+  "language": "typescript",
+  "related": [
+    "javascript",
+    "dart",
+    "csharp"
+  ],
+  "kinds": []
+}

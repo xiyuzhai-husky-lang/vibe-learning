@@ -1,0 +1,11 @@
+{
+  "id": "jq",
+  "title": "jq",
+  "tagline": "Every jq feature, one snippet at a time.",
+  "language": "jq",
+  "related": [
+    "json",
+    "bash"
+  ],
+  "kinds": []
+}

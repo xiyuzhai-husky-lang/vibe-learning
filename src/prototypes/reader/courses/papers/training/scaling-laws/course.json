@@ -1,0 +1,11 @@
+{
+  "id": "scaling-laws",
+  "title": "Scaling laws for neural language models",
+  "tagline": "Loss as a power law of compute, data and parameters.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2001.08361",
+  "related": [
+    "chinchilla"
+  ],
+  "kinds": []
+}

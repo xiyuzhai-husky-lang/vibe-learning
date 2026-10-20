@@ -1,0 +1,11 @@
+{
+  "id": "racket",
+  "title": "Racket",
+  "tagline": "Every Racket feature, one snippet at a time.",
+  "language": "racket",
+  "related": [
+    "clojure",
+    "ocaml"
+  ],
+  "kinds": []
+}

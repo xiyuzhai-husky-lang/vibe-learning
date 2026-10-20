@@ -1,0 +1,13 @@
+{
+  "id": "openblas",
+  "title": "OpenBLAS",
+  "tagline": "Optimized BLAS kernels, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/OpenMathLib/OpenBLAS",
+  "related": [
+    "c",
+    "fortran",
+    "numpy"
+  ],
+  "kinds": []
+}

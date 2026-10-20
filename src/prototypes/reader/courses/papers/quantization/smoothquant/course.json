@@ -1,0 +1,12 @@
+{
+  "id": "smoothquant",
+  "title": "SmoothQuant",
+  "tagline": "Move activation outliers into the weights.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2211.10438",
+  "related": [
+    "awq",
+    "llm-int8"
+  ],
+  "kinds": []
+}

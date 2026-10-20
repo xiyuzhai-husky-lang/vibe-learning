@@ -1,0 +1,12 @@
+{
+  "id": "git",
+  "title": "Git",
+  "tagline": "The version control system, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/git/git",
+  "related": [
+    "c",
+    "bash"
+  ],
+  "kinds": []
+}

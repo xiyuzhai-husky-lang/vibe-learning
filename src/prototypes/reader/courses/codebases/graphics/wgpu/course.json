@@ -1,0 +1,13 @@
+{
+  "id": "wgpu",
+  "title": "wgpu",
+  "tagline": "Cross-platform GPU API in Rust, one snippet at a time.",
+  "language": "rust",
+  "source": "https://github.com/gfx-rs/wgpu",
+  "related": [
+    "rust",
+    "wgsl",
+    "bevy"
+  ],
+  "kinds": []
+}

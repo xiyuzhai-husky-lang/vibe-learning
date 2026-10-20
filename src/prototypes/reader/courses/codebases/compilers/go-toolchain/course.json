@@ -1,0 +1,11 @@
+{
+  "id": "go-toolchain",
+  "title": "Go toolchain",
+  "tagline": "The Go compiler, linker and runtime, one snippet at a time.",
+  "language": "go",
+  "source": "https://github.com/golang/go",
+  "related": [
+    "go"
+  ],
+  "kinds": []
+}

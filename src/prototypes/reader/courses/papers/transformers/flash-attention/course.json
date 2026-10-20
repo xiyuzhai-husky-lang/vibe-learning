@@ -1,0 +1,12 @@
+{
+  "id": "flash-attention",
+  "title": "FlashAttention",
+  "tagline": "Exact attention that never materializes the score matrix.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2205.14135",
+  "related": [
+    "attention-is-all-you-need",
+    "paged-attention"
+  ],
+  "kinds": []
+}

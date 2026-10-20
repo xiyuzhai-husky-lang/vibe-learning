@@ -47,19 +47,29 @@ What the reader does not need to learn:
 
 Learning a language is about that language only. No operating systems, networking or databases. Keep every lesson as simple as possible, keeping only the one core difficulty worth the effort.
 
-## Scenario: a senior engineer reviewing code
+## What is left for the human: every language feature, one atomic snippet at a time
 
-Every lesson is a code review. In front of the reader is code written by an AI or a colleague, and the reader answers the reviewer's question: approve, or request changes, and for which reason?
+Two review directions were rejected on 2026-10-18. Language traps and conventions: "advancement of AI and checkers and provers will make these sort of thing trivial". Checking code against a ticket: "we'll use CNL to fix this"; intent will be written in a controlled natural language, so code-vs-intent checking becomes mechanical.
 
-Never ask "what is the output". Predicting output is drilling, not reviewing, and not something a senior engineer is asked. When learning a new language, the first thing a reviewer must learn is which constructs look like bugs in other languages but are normal here, and which constructs look normal but are traps here.
+The decision: **"just covering every language features with atomic code snippets are enough."** The product for learning a language is the basics stage and nothing else. Every feature of the language gets one or more atomic snippets, each with one highlighted part and three natural-language choices saying what that part is. Coverage is the goal: when the reader has guessed their way through every feature, they can read any code in the language, and reading is all a human needs when AI writes, checkers verify and CNL carries intent.
 
-What is reviewed is production code, not textbook examples. Lessons must be easy: the only difficulty is unfamiliarity with the language, never the lesson itself.
+Never ask "what is the output". Predicting output is drilling, not reading.
 
-## Start with basics: explain the highlighted part
+## The same format learns a codebase
 
-The basics stage is not a review. Show a Go snippet with one part highlighted, and three natural-language choices saying what that part is, syntax and semantics, with one correct. Simple enough that someone who has never seen Go guesses right more than 80% of the time from context and common sense. After the basics, move on to reviews.
+After Go, the user asked for Splash, Inco AI's local inference engine (2026-10-18). The first attempt learned it the same way as a language: verbatim snippets, one highlighted part, what is it. The user rejected that on 2026-10-19: "the exercises are about unimportant little details", "you mistook codebase for reading code". Learning a codebase is not reading its code. It is knowing the system: its parts and boundaries, the flows through it, what it keeps and why, the few invariants it rests on, how it fails, and where a change belongs. Those are the questions, in plain words, with code only as evidence. That is what someone needs in order to direct an AI at a codebase and judge what comes back.
 
-Rejected formats: a pairing game (match Go snippets to Rust snippets), too much interaction; "one Go snippet, pick the faithful Rust translation of three", which makes the reader read three code blocks for one syntax point. The whole site has one action: read code, click one choice.
+## An encyclopedia of courses: a tree, mostly empty, connected
+
+The user set the shape of the catalog on 2026-10-19: there should be tons of courses, organised like an encyclopedia, as a tree, with entries connected to each other, most of them empty until the content is needed. So the catalog is a tree of categories (languages by family, codebases by domain, tools) in which every language, tool or codebase worth reading gets an entry now, and each entry links to the entries a reader should see next. Filling an entry is the same job as before: every feature or subsystem, one atomic snippet at a time. The map comes first; the content follows demand.
+
+## User data stays local
+
+Whatever a learner does (answers, first-try results) is stored locally, in a gitignored `.local/` directory at the repository root, never in a tracked file.
+
+## Papers, the same way
+
+A paper is learned like a codebase (2026-10-20): the map of the idea first, then questions that ask why it works, what it assumes and costs, and what followed. Not reading the paper's sentences and guessing what they mean. The catalog's top level is Languages, Papers, Codebases.
 
 ## Everything in English
 

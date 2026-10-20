@@ -1,0 +1,12 @@
+{
+  "id": "cpython",
+  "title": "CPython",
+  "tagline": "The reference Python interpreter, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/python/cpython",
+  "related": [
+    "python",
+    "c"
+  ],
+  "kinds": []
+}

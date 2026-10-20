@@ -1,0 +1,11 @@
+{
+  "id": "zero",
+  "title": "ZeRO",
+  "tagline": "Partition optimizer state, gradients and parameters.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/1910.02054",
+  "related": [
+    "megatron-lm"
+  ],
+  "kinds": []
+}

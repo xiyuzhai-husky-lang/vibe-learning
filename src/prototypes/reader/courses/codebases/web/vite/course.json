@@ -1,0 +1,12 @@
+{
+  "id": "vite",
+  "title": "Vite",
+  "tagline": "The frontend build tool, one snippet at a time.",
+  "language": "typescript",
+  "source": "https://github.com/vitejs/vite",
+  "related": [
+    "typescript",
+    "react"
+  ],
+  "kinds": []
+}

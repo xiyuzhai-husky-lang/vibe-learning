@@ -1,0 +1,11 @@
+{
+  "id": "megatron-lm",
+  "title": "Megatron-LM",
+  "tagline": "Tensor parallelism inside a layer.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/1909.08053",
+  "related": [
+    "zero"
+  ],
+  "kinds": []
+}

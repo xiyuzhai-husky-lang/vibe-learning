@@ -1,0 +1,11 @@
+{
+  "id": "latex",
+  "title": "LaTeX",
+  "tagline": "Every LaTeX feature, one snippet at a time.",
+  "language": "latex",
+  "related": [
+    "markdown",
+    "lean"
+  ],
+  "kinds": []
+}

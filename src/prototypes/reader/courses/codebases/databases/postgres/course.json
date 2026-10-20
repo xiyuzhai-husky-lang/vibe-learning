@@ -1,0 +1,12 @@
+{
+  "id": "postgres",
+  "title": "PostgreSQL",
+  "tagline": "The relational database, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/postgres/postgres",
+  "related": [
+    "c",
+    "sql"
+  ],
+  "kinds": []
+}

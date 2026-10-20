@@ -1,0 +1,12 @@
+{
+  "id": "cpp",
+  "title": "C++",
+  "tagline": "Every C++ feature, one snippet at a time.",
+  "language": "cpp",
+  "related": [
+    "c",
+    "rust",
+    "metal"
+  ],
+  "kinds": []
+}

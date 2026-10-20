@@ -1,0 +1,11 @@
+{
+  "id": "r",
+  "title": "R",
+  "tagline": "Every R feature, one snippet at a time.",
+  "language": "r",
+  "related": [
+    "python",
+    "julia"
+  ],
+  "kinds": []
+}

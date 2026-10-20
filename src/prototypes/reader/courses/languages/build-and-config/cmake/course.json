@@ -1,0 +1,11 @@
+{
+  "id": "cmake",
+  "title": "CMake",
+  "tagline": "Every CMake feature, one snippet at a time.",
+  "language": "cmake",
+  "related": [
+    "make",
+    "cpp"
+  ],
+  "kinds": []
+}

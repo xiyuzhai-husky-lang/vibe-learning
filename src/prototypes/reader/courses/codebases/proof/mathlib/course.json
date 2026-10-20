@@ -1,0 +1,12 @@
+{
+  "id": "mathlib",
+  "title": "Mathlib",
+  "tagline": "The mathematics library of Lean 4, one snippet at a time.",
+  "language": "lean",
+  "source": "https://github.com/leanprover-community/mathlib4",
+  "related": [
+    "lean",
+    "lean4"
+  ],
+  "kinds": []
+}

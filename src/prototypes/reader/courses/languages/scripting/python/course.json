@@ -1,0 +1,12 @@
+{
+  "id": "python",
+  "title": "Python",
+  "tagline": "Every Python feature, one snippet at a time.",
+  "language": "python",
+  "related": [
+    "ruby",
+    "julia",
+    "typescript"
+  ],
+  "kinds": []
+}

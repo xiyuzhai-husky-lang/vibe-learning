@@ -1,0 +1,13 @@
+{
+  "id": "mamba",
+  "title": "Mamba",
+  "tagline": "Selective state spaces.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2312.00752",
+  "related": [
+    "linear-attention",
+    "gated-delta-net",
+    "rwkv"
+  ],
+  "kinds": []
+}

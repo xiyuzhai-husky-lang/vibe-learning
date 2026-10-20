@@ -1,0 +1,12 @@
+{
+  "id": "neovim",
+  "title": "Neovim",
+  "tagline": "The editor, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/neovim/neovim",
+  "related": [
+    "c",
+    "lua"
+  ],
+  "kinds": []
+}

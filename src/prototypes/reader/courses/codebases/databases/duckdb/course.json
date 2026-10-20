@@ -1,0 +1,13 @@
+{
+  "id": "duckdb",
+  "title": "DuckDB",
+  "tagline": "The in-process analytical database, one snippet at a time.",
+  "language": "cpp",
+  "source": "https://github.com/duckdb/duckdb",
+  "related": [
+    "cpp",
+    "sql",
+    "sqlite"
+  ],
+  "kinds": []
+}

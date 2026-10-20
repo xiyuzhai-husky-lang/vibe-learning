@@ -1,0 +1,12 @@
+{
+  "id": "rails",
+  "title": "Ruby on Rails",
+  "tagline": "The Ruby web framework, one snippet at a time.",
+  "language": "ruby",
+  "source": "https://github.com/rails/rails",
+  "related": [
+    "ruby",
+    "sql"
+  ],
+  "kinds": []
+}

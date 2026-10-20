@@ -1,0 +1,13 @@
+{
+  "id": "numpy",
+  "title": "NumPy",
+  "tagline": "The n-dimensional array, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/numpy/numpy",
+  "related": [
+    "python",
+    "c",
+    "openblas"
+  ],
+  "kinds": []
+}

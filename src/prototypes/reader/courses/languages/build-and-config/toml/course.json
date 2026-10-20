@@ -1,0 +1,11 @@
+{
+  "id": "toml",
+  "title": "TOML",
+  "tagline": "Every TOML feature, one snippet at a time.",
+  "language": "toml",
+  "related": [
+    "yaml",
+    "rust"
+  ],
+  "kinds": []
+}

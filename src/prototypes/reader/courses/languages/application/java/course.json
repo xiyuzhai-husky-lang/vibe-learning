@@ -1,0 +1,12 @@
+{
+  "id": "java",
+  "title": "Java",
+  "tagline": "Every Java feature, one snippet at a time.",
+  "language": "java",
+  "related": [
+    "kotlin",
+    "csharp",
+    "go"
+  ],
+  "kinds": []
+}

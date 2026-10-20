@@ -1,0 +1,12 @@
+{
+  "id": "openjdk",
+  "title": "OpenJDK",
+  "tagline": "The Java virtual machine and class library, one snippet at a time.",
+  "language": "cpp",
+  "source": "https://github.com/openjdk/jdk",
+  "related": [
+    "java",
+    "cpp"
+  ],
+  "kinds": []
+}

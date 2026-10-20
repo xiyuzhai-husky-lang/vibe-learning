@@ -1,0 +1,12 @@
+{
+  "id": "llvm",
+  "title": "LLVM",
+  "tagline": "The compiler infrastructure, one snippet at a time.",
+  "language": "cpp",
+  "source": "https://github.com/llvm/llvm-project",
+  "related": [
+    "cpp",
+    "rustc"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "freebsd",
+  "title": "FreeBSD",
+  "tagline": "The BSD kernel and userland, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/freebsd/freebsd-src",
+  "related": [
+    "c",
+    "linux"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "awk",
+  "title": "AWK",
+  "tagline": "Every AWK feature, one snippet at a time.",
+  "language": "awk",
+  "related": [
+    "sed",
+    "bash",
+    "perl"
+  ],
+  "kinds": []
+}

@@ -38,3 +38,6 @@ CLAUDE.md
 # Node / frontend
 node_modules/
 src/prototypes/*/web/dist/
+
+# Local user data (progress); never committed
+.local/

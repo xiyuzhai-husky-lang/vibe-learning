@@ -1,0 +1,13 @@
+{
+  "id": "tree-sitter",
+  "title": "tree-sitter",
+  "tagline": "The incremental parser generator, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/tree-sitter/tree-sitter",
+  "related": [
+    "c",
+    "rust",
+    "javascript"
+  ],
+  "kinds": []
+}

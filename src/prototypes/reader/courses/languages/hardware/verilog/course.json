@@ -1,0 +1,11 @@
+{
+  "id": "verilog",
+  "title": "Verilog",
+  "tagline": "Every Verilog feature, one snippet at a time.",
+  "language": "verilog",
+  "related": [
+    "systemverilog",
+    "vhdl"
+  ],
+  "kinds": []
+}

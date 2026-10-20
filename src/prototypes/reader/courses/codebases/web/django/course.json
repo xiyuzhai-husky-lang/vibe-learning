@@ -1,0 +1,12 @@
+{
+  "id": "django",
+  "title": "Django",
+  "tagline": "The Python web framework, one snippet at a time.",
+  "language": "python",
+  "source": "https://github.com/django/django",
+  "related": [
+    "python",
+    "sql"
+  ],
+  "kinds": []
+}

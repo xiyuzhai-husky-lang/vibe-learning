@@ -1,0 +1,12 @@
+{
+  "id": "triton",
+  "title": "Triton",
+  "tagline": "Every Triton feature, one snippet at a time.",
+  "language": "python",
+  "related": [
+    "cuda",
+    "python",
+    "pytorch"
+  ],
+  "kinds": []
+}

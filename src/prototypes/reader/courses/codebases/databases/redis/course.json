@@ -1,0 +1,11 @@
+{
+  "id": "redis",
+  "title": "Redis",
+  "tagline": "The in-memory data structure store, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/redis/redis",
+  "related": [
+    "c"
+  ],
+  "kinds": []
+}

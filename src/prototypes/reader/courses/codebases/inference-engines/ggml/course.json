@@ -1,0 +1,12 @@
+{
+  "id": "ggml",
+  "title": "ggml",
+  "tagline": "The tensor library under llama.cpp, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/ggml-org/ggml",
+  "related": [
+    "c",
+    "llama-cpp"
+  ],
+  "kinds": []
+}

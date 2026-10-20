@@ -1,0 +1,12 @@
+{
+  "id": "perl",
+  "title": "Perl",
+  "tagline": "Every Perl feature, one snippet at a time.",
+  "language": "perl",
+  "related": [
+    "ruby",
+    "regex",
+    "awk"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "elixir",
+  "title": "Elixir",
+  "tagline": "Every Elixir feature, one snippet at a time.",
+  "language": "elixir",
+  "related": [
+    "erlang",
+    "ruby"
+  ],
+  "kinds": []
+}

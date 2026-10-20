@@ -1,0 +1,12 @@
+{
+  "id": "bash",
+  "title": "Bash",
+  "tagline": "Every Bash feature, one snippet at a time.",
+  "language": "bash",
+  "related": [
+    "awk",
+    "sed",
+    "make"
+  ],
+  "kinds": []
+}

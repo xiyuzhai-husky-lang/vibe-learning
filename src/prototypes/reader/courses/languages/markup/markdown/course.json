@@ -1,0 +1,11 @@
+{
+  "id": "markdown",
+  "title": "Markdown",
+  "tagline": "Every Markdown feature, one snippet at a time.",
+  "language": "markdown",
+  "related": [
+    "html",
+    "latex"
+  ],
+  "kinds": []
+}

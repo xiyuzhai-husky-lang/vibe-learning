@@ -1,0 +1,13 @@
+{
+  "id": "paged-attention",
+  "title": "PagedAttention (vLLM)",
+  "tagline": "KV cache in pages, like virtual memory.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2309.06180",
+  "related": [
+    "flash-attention",
+    "speculative-decoding",
+    "vllm"
+  ],
+  "kinds": []
+}

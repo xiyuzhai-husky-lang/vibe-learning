@@ -1,0 +1,12 @@
+{
+  "id": "sed",
+  "title": "sed",
+  "tagline": "Every sed feature, one snippet at a time.",
+  "language": "bash",
+  "related": [
+    "awk",
+    "regex",
+    "bash"
+  ],
+  "kinds": []
+}

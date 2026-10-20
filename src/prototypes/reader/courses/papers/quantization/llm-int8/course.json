@@ -1,0 +1,12 @@
+{
+  "id": "llm-int8",
+  "title": "LLM.int8()",
+  "tagline": "8-bit matmuls with outlier features kept in 16 bits.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2208.07339",
+  "related": [
+    "gptq",
+    "smoothquant"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "chinchilla",
+  "title": "Chinchilla: compute-optimal training",
+  "tagline": "Scale data and parameters together.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2203.15556",
+  "related": [
+    "scaling-laws"
+  ],
+  "kinds": []
+}

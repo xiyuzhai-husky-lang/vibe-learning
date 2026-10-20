@@ -1,0 +1,12 @@
+{
+  "id": "mapreduce",
+  "title": "MapReduce",
+  "tagline": "Data processing as map and reduce over a cluster.",
+  "language": "text",
+  "source": "https://research.google/pubs/pub62/",
+  "related": [
+    "gfs",
+    "bigtable"
+  ],
+  "kinds": []
+}

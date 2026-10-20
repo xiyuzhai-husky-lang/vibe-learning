@@ -1,0 +1,12 @@
+{
+  "id": "kotlin",
+  "title": "Kotlin",
+  "tagline": "Every Kotlin feature, one snippet at a time.",
+  "language": "kotlin",
+  "related": [
+    "java",
+    "swift",
+    "scala"
+  ],
+  "kinds": []
+}

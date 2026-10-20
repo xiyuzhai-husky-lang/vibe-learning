@@ -1,0 +1,11 @@
+{
+  "id": "protobuf",
+  "title": "Protocol Buffers",
+  "tagline": "Every Protocol Buffers feature, one snippet at a time.",
+  "language": "proto",
+  "related": [
+    "go",
+    "json"
+  ],
+  "kinds": []
+}

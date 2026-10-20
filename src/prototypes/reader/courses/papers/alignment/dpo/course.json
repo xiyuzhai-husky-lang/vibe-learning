@@ -1,0 +1,12 @@
+{
+  "id": "dpo",
+  "title": "Direct preference optimization",
+  "tagline": "Preference learning without a reward model.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2305.18290",
+  "related": [
+    "instructgpt",
+    "ppo"
+  ],
+  "kinds": []
+}

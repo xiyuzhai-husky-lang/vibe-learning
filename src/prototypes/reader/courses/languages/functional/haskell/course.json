@@ -1,0 +1,12 @@
+{
+  "id": "haskell",
+  "title": "Haskell",
+  "tagline": "Every Haskell feature, one snippet at a time.",
+  "language": "haskell",
+  "related": [
+    "ocaml",
+    "lean",
+    "scala"
+  ],
+  "kinds": []
+}

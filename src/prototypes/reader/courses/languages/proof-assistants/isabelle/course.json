@@ -1,0 +1,11 @@
+{
+  "id": "isabelle",
+  "title": "Isabelle/HOL",
+  "tagline": "Every Isabelle/HOL feature, one snippet at a time.",
+  "language": "isabelle",
+  "related": [
+    "lean",
+    "rocq"
+  ],
+  "kinds": []
+}

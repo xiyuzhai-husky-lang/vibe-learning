@@ -1,0 +1,12 @@
+{
+  "id": "bazel",
+  "title": "Bazel",
+  "tagline": "Every Bazel feature, one snippet at a time.",
+  "language": "starlark",
+  "related": [
+    "make",
+    "cmake",
+    "python"
+  ],
+  "kinds": []
+}

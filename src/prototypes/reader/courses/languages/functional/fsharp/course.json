@@ -1,0 +1,11 @@
+{
+  "id": "fsharp",
+  "title": "F#",
+  "tagline": "Every F# feature, one snippet at a time.",
+  "language": "fsharp",
+  "related": [
+    "ocaml",
+    "csharp"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "multi-query-attention",
+  "title": "Multi-query attention",
+  "tagline": "One key/value head shared by all query heads.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/1911.02150",
+  "related": [
+    "grouped-query-attention",
+    "attention-is-all-you-need"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "nginx",
+  "title": "nginx",
+  "tagline": "The web server and reverse proxy, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/nginx/nginx",
+  "related": [
+    "c"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "candle",
+  "title": "Candle",
+  "tagline": "A minimalist ML framework in Rust, one snippet at a time.",
+  "language": "rust",
+  "source": "https://github.com/huggingface/candle",
+  "related": [
+    "rust",
+    "pytorch"
+  ],
+  "kinds": []
+}

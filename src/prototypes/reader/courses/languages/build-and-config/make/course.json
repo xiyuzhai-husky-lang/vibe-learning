@@ -1,0 +1,12 @@
+{
+  "id": "make",
+  "title": "Make",
+  "tagline": "Every Make feature, one snippet at a time.",
+  "language": "make",
+  "related": [
+    "cmake",
+    "bash",
+    "bazel"
+  ],
+  "kinds": []
+}

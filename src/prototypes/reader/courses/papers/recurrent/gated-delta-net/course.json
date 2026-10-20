@@ -1,0 +1,13 @@
+{
+  "id": "gated-delta-net",
+  "title": "Gated DeltaNet",
+  "tagline": "Delta rule with gating, in hardware-friendly chunks.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2412.06464",
+  "related": [
+    "mamba",
+    "linear-attention",
+    "splash"
+  ],
+  "kinds": []
+}

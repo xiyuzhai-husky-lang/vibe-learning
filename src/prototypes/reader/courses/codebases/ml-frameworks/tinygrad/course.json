@@ -1,0 +1,12 @@
+{
+  "id": "tinygrad",
+  "title": "tinygrad",
+  "tagline": "A small deep learning framework, one snippet at a time.",
+  "language": "python",
+  "source": "https://github.com/tinygrad/tinygrad",
+  "related": [
+    "python",
+    "pytorch"
+  ],
+  "kinds": []
+}

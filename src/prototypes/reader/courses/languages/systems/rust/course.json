@@ -1,0 +1,12 @@
+{
+  "id": "rust",
+  "title": "Rust",
+  "tagline": "Every Rust feature, one snippet at a time.",
+  "language": "rust",
+  "related": [
+    "cpp",
+    "ocaml",
+    "zig"
+  ],
+  "kinds": []
+}

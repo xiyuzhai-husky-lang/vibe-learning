@@ -1,0 +1,11 @@
+{
+  "id": "glsl",
+  "title": "GLSL",
+  "tagline": "Every GLSL feature, one snippet at a time.",
+  "language": "glsl",
+  "related": [
+    "wgsl",
+    "c"
+  ],
+  "kinds": []
+}

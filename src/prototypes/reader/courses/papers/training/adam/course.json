@@ -1,0 +1,11 @@
+{
+  "id": "adam",
+  "title": "Adam",
+  "tagline": "Adaptive moments for stochastic optimization.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/1412.6980",
+  "related": [
+    "scaling-laws"
+  ],
+  "kinds": []
+}

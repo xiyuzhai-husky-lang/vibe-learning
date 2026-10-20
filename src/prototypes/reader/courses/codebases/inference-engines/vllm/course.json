@@ -1,0 +1,14 @@
+{
+  "id": "vllm",
+  "title": "vLLM",
+  "tagline": "High-throughput LLM serving with paged attention, one snippet at a time.",
+  "language": "python",
+  "source": "https://github.com/vllm-project/vllm",
+  "related": [
+    "python",
+    "cuda",
+    "pytorch",
+    "sglang"
+  ],
+  "kinds": []
+}

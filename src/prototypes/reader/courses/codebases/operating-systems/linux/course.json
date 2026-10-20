@@ -1,0 +1,12 @@
+{
+  "id": "linux",
+  "title": "Linux",
+  "tagline": "The kernel, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/torvalds/linux",
+  "related": [
+    "c",
+    "xv6"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "react",
+  "title": "React",
+  "tagline": "The UI library, one snippet at a time.",
+  "language": "javascript",
+  "source": "https://github.com/facebook/react",
+  "related": [
+    "javascript",
+    "typescript",
+    "vite"
+  ],
+  "kinds": []
+}

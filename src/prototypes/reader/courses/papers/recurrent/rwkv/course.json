@@ -1,0 +1,12 @@
+{
+  "id": "rwkv",
+  "title": "RWKV",
+  "tagline": "An RNN trained like a transformer.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2305.13048",
+  "related": [
+    "mamba",
+    "linear-attention"
+  ],
+  "kinds": []
+}

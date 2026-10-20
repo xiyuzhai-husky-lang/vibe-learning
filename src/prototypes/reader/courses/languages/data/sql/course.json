@@ -1,0 +1,12 @@
+{
+  "id": "sql",
+  "title": "SQL",
+  "tagline": "Every SQL feature, one snippet at a time.",
+  "language": "sql",
+  "related": [
+    "sqlite",
+    "postgres",
+    "duckdb"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "spanner",
+  "title": "Spanner",
+  "tagline": "Global consistency from synchronized clocks.",
+  "language": "text",
+  "source": "https://research.google/pubs/pub39966/",
+  "related": [
+    "bigtable",
+    "paxos"
+  ],
+  "kinds": []
+}

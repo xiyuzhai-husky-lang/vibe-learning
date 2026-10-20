@@ -1,0 +1,12 @@
+{
+  "id": "awq",
+  "title": "AWQ",
+  "tagline": "Protect the few salient weights by scaling activations.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2306.00978",
+  "related": [
+    "gptq",
+    "smoothquant"
+  ],
+  "kinds": []
+}

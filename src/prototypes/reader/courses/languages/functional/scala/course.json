@@ -1,0 +1,12 @@
+{
+  "id": "scala",
+  "title": "Scala",
+  "tagline": "Every Scala feature, one snippet at a time.",
+  "language": "scala",
+  "related": [
+    "haskell",
+    "kotlin",
+    "java"
+  ],
+  "kinds": []
+}

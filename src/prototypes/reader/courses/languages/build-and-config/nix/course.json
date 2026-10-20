@@ -1,0 +1,11 @@
+{
+  "id": "nix",
+  "title": "Nix",
+  "tagline": "Every Nix feature, one snippet at a time.",
+  "language": "nix",
+  "related": [
+    "haskell",
+    "bash"
+  ],
+  "kinds": []
+}

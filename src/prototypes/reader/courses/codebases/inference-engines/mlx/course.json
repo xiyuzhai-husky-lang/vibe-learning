@@ -1,0 +1,14 @@
+{
+  "id": "mlx",
+  "title": "MLX",
+  "tagline": "Array framework for Apple silicon, one snippet at a time.",
+  "language": "cpp",
+  "source": "https://github.com/ml-explore/mlx",
+  "related": [
+    "cpp",
+    "metal",
+    "python",
+    "splash"
+  ],
+  "kinds": []
+}

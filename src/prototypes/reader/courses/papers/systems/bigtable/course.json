@@ -1,0 +1,13 @@
+{
+  "id": "bigtable",
+  "title": "Bigtable",
+  "tagline": "A sparse sorted map at scale.",
+  "language": "text",
+  "source": "https://research.google/pubs/pub27898/",
+  "related": [
+    "gfs",
+    "spanner",
+    "dynamo"
+  ],
+  "kinds": []
+}

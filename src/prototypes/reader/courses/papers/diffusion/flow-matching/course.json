@@ -1,0 +1,11 @@
+{
+  "id": "flow-matching",
+  "title": "Flow matching",
+  "tagline": "Regress a vector field along straight paths.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2210.02747",
+  "related": [
+    "ddpm"
+  ],
+  "kinds": []
+}

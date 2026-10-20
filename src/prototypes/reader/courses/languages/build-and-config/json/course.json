@@ -1,0 +1,12 @@
+{
+  "id": "json",
+  "title": "JSON",
+  "tagline": "Every JSON feature, one snippet at a time.",
+  "language": "json",
+  "related": [
+    "yaml",
+    "jq",
+    "javascript"
+  ],
+  "kinds": []
+}

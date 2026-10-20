@@ -1,0 +1,12 @@
+{
+  "id": "regex",
+  "title": "Regular expressions",
+  "tagline": "Every Regular expressions feature, one snippet at a time.",
+  "language": "regex",
+  "related": [
+    "perl",
+    "sed",
+    "ripgrep"
+  ],
+  "kinds": []
+}

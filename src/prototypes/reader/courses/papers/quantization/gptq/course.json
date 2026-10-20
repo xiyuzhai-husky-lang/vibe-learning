@@ -1,0 +1,12 @@
+{
+  "id": "gptq",
+  "title": "GPTQ",
+  "tagline": "One-shot 4-bit weight quantization with second-order information.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2210.17323",
+  "related": [
+    "awq",
+    "llm-int8"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "qlora",
+  "title": "QLoRA",
+  "tagline": "Fine-tune through a 4-bit frozen base.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2305.14314",
+  "related": [
+    "lora",
+    "gptq"
+  ],
+  "kinds": []
+}

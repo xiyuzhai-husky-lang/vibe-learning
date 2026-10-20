@@ -1,0 +1,12 @@
+{
+  "id": "raft",
+  "title": "Raft",
+  "tagline": "Understandable consensus with a leader.",
+  "language": "text",
+  "source": "https://raft.github.io/raft.pdf",
+  "related": [
+    "paxos",
+    "dynamo"
+  ],
+  "kinds": []
+}

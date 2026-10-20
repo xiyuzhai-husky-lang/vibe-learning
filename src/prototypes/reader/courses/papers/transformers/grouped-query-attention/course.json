@@ -1,0 +1,11 @@
+{
+  "id": "grouped-query-attention",
+  "title": "Grouped-query attention",
+  "tagline": "A few KV heads shared among query groups.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2305.13245",
+  "related": [
+    "multi-query-attention"
+  ],
+  "kinds": []
+}

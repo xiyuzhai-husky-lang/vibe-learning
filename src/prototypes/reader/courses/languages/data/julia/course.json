@@ -1,0 +1,12 @@
+{
+  "id": "julia",
+  "title": "Julia",
+  "tagline": "Every Julia feature, one snippet at a time.",
+  "language": "julia",
+  "related": [
+    "python",
+    "r",
+    "fortran"
+  ],
+  "kinds": []
+}

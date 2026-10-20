@@ -1,0 +1,12 @@
+{
+  "id": "rocq",
+  "title": "Rocq (Coq)",
+  "tagline": "Every Rocq (Coq) feature, one snippet at a time.",
+  "language": "rocq",
+  "related": [
+    "lean",
+    "agda",
+    "ocaml"
+  ],
+  "kinds": []
+}

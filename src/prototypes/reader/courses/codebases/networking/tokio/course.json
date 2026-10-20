@@ -1,0 +1,11 @@
+{
+  "id": "tokio",
+  "title": "Tokio",
+  "tagline": "Asynchronous runtime for Rust, one snippet at a time.",
+  "language": "rust",
+  "source": "https://github.com/tokio-rs/tokio",
+  "related": [
+    "rust"
+  ],
+  "kinds": []
+}

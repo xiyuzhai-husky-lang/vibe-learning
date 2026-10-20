@@ -1,0 +1,13 @@
+{
+  "id": "attention-is-all-you-need",
+  "title": "Attention Is All You Need",
+  "tagline": "The Transformer: attention instead of recurrence.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/1706.03762",
+  "related": [
+    "flash-attention",
+    "rope",
+    "multi-query-attention"
+  ],
+  "kinds": []
+}

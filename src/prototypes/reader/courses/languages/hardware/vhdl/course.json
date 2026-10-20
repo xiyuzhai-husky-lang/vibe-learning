@@ -1,0 +1,10 @@
+{
+  "id": "vhdl",
+  "title": "VHDL",
+  "tagline": "Every VHDL feature, one snippet at a time.",
+  "language": "vhdl",
+  "related": [
+    "verilog"
+  ],
+  "kinds": []
+}

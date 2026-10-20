@@ -1,0 +1,13 @@
+{
+  "id": "lean4",
+  "title": "Lean 4 compiler",
+  "tagline": "The Lean 4 language, elaborator and runtime, one snippet at a time.",
+  "language": "lean",
+  "source": "https://github.com/leanprover/lean4",
+  "related": [
+    "lean",
+    "cpp",
+    "mathlib"
+  ],
+  "kinds": []
+}

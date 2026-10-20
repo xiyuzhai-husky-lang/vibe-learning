@@ -1,0 +1,12 @@
+{
+  "id": "dynamo",
+  "title": "Dynamo",
+  "tagline": "Availability over consistency, with vector clocks.",
+  "language": "text",
+  "source": "https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf",
+  "related": [
+    "bigtable",
+    "raft"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,13 @@
+{
+  "id": "llama-cpp",
+  "title": "llama.cpp",
+  "tagline": "LLM inference in plain C/C++ with ggml, one snippet at a time.",
+  "language": "cpp",
+  "source": "https://github.com/ggml-org/llama.cpp",
+  "related": [
+    "cpp",
+    "splash",
+    "ggml"
+  ],
+  "kinds": []
+}

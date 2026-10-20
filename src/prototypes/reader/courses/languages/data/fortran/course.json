@@ -1,0 +1,12 @@
+{
+  "id": "fortran",
+  "title": "Fortran",
+  "tagline": "Every Fortran feature, one snippet at a time.",
+  "language": "fortran",
+  "related": [
+    "c",
+    "julia",
+    "openblas"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,11 @@
+{
+  "id": "rope",
+  "title": "RoFormer: rotary position embedding",
+  "tagline": "Relative position by rotating queries and keys.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2104.09864",
+  "related": [
+    "attention-is-all-you-need"
+  ],
+  "kinds": []
+}

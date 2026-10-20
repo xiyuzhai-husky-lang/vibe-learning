@@ -1,0 +1,39 @@
+{
+  "id": "speculative-decoding",
+  "title": "Speculative decoding",
+  "tagline": "Fast inference from transformers via speculative decoding (Leviathan, Kalman, Matias, 2023).",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2211.17192",
+  "related": [
+    "medusa",
+    "eagle",
+    "splash",
+    "attention-is-all-you-need"
+  ],
+  "kinds": [
+    {
+      "id": "problem",
+      "label": "The problem"
+    },
+    {
+      "id": "idea",
+      "label": "The idea"
+    },
+    {
+      "id": "why-it-works",
+      "label": "Why it works"
+    },
+    {
+      "id": "assumptions",
+      "label": "Assumptions and costs"
+    },
+    {
+      "id": "results",
+      "label": "Results and limits"
+    },
+    {
+      "id": "aftermath",
+      "label": "What followed"
+    }
+  ]
+}

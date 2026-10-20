@@ -1,0 +1,12 @@
+{
+  "id": "linear-attention",
+  "title": "Transformers are RNNs (linear attention)",
+  "tagline": "Attention as a recurrence with a kernel feature map.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2006.16236",
+  "related": [
+    "mamba",
+    "gated-delta-net"
+  ],
+  "kinds": []
+}

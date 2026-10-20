@@ -1,0 +1,12 @@
+{
+  "id": "paxos",
+  "title": "Paxos made simple",
+  "tagline": "Consensus with unreliable processes.",
+  "language": "text",
+  "source": "https://lamport.azurewebsites.net/pubs/paxos-simple.pdf",
+  "related": [
+    "raft",
+    "spanner"
+  ],
+  "kinds": []
+}

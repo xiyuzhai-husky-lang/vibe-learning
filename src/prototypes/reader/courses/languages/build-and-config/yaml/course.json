@@ -1,0 +1,11 @@
+{
+  "id": "yaml",
+  "title": "YAML",
+  "tagline": "Every YAML feature, one snippet at a time.",
+  "language": "yaml",
+  "related": [
+    "toml",
+    "json"
+  ],
+  "kinds": []
+}

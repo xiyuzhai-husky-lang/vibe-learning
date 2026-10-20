@@ -1,0 +1,12 @@
+{
+  "id": "eagle",
+  "title": "EAGLE",
+  "tagline": "Drafting at the feature level.",
+  "language": "text",
+  "source": "https://arxiv.org/abs/2401.15077",
+  "related": [
+    "speculative-decoding",
+    "medusa"
+  ],
+  "kinds": []
+}

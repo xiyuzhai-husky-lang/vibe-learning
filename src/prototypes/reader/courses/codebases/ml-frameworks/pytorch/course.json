@@ -1,0 +1,14 @@
+{
+  "id": "pytorch",
+  "title": "PyTorch",
+  "tagline": "Tensors and autograd at scale, one snippet at a time.",
+  "language": "cpp",
+  "source": "https://github.com/pytorch/pytorch",
+  "related": [
+    "python",
+    "cpp",
+    "cuda",
+    "jax"
+  ],
+  "kinds": []
+}

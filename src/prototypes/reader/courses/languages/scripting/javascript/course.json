@@ -1,0 +1,11 @@
+{
+  "id": "javascript",
+  "title": "JavaScript",
+  "tagline": "Every JavaScript feature, one snippet at a time.",
+  "language": "javascript",
+  "related": [
+    "typescript",
+    "python"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "html",
+  "title": "HTML",
+  "tagline": "Every HTML feature, one snippet at a time.",
+  "language": "html",
+  "related": [
+    "css",
+    "javascript",
+    "react"
+  ],
+  "kinds": []
+}

@@ -1,0 +1,12 @@
+{
+  "id": "wgsl",
+  "title": "WGSL",
+  "tagline": "Every WGSL feature, one snippet at a time.",
+  "language": "wgsl",
+  "related": [
+    "glsl",
+    "metal",
+    "wgpu"
+  ],
+  "kinds": []
+}

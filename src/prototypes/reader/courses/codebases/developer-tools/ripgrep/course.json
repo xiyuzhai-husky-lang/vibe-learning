@@ -1,0 +1,12 @@
+{
+  "id": "ripgrep",
+  "title": "ripgrep",
+  "tagline": "Recursive regex search, one snippet at a time.",
+  "language": "rust",
+  "source": "https://github.com/BurntSushi/ripgrep",
+  "related": [
+    "rust",
+    "regex"
+  ],
+  "kinds": []
+}

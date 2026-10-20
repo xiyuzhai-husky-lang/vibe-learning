@@ -1,0 +1,14 @@
+{
+  "id": "lean",
+  "title": "Lean 4",
+  "tagline": "Every Lean 4 feature, one snippet at a time.",
+  "language": "lean",
+  "related": [
+    "rocq",
+    "agda",
+    "haskell",
+    "lean4",
+    "mathlib"
+  ],
+  "kinds": []
+}

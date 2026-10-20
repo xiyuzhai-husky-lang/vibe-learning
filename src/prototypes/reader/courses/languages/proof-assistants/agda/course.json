@@ -1,0 +1,12 @@
+{
+  "id": "agda",
+  "title": "Agda",
+  "tagline": "Every Agda feature, one snippet at a time.",
+  "language": "agda",
+  "related": [
+    "lean",
+    "rocq",
+    "haskell"
+  ],
+  "kinds": []
+}

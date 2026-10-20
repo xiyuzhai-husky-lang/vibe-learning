@@ -1,0 +1,11 @@
+{
+  "id": "dockerfile",
+  "title": "Dockerfile",
+  "tagline": "Every Dockerfile feature, one snippet at a time.",
+  "language": "dockerfile",
+  "related": [
+    "bash",
+    "yaml"
+  ],
+  "kinds": []
+}

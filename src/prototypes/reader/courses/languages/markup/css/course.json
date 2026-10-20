@@ -1,0 +1,10 @@
+{
+  "id": "css",
+  "title": "CSS",
+  "tagline": "Every CSS feature, one snippet at a time.",
+  "language": "css",
+  "related": [
+    "html"
+  ],
+  "kinds": []
+}

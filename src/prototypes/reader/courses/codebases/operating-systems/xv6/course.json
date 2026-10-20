@@ -1,0 +1,12 @@
+{
+  "id": "xv6",
+  "title": "xv6",
+  "tagline": "A teaching operating system for RISC-V, one snippet at a time.",
+  "language": "c",
+  "source": "https://github.com/mit-pdos/xv6-riscv",
+  "related": [
+    "c",
+    "linux"
+  ],
+  "kinds": []
+}
