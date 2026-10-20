@@ -53,6 +53,7 @@ type publicLesson struct {
 	Code      string   `json:"code,omitempty"`
 	Highlight string   `json:"highlight,omitempty"`
 	Context   string   `json:"context,omitempty"`
+	Figure    string   `json:"figure,omitempty"`
 	Question  string   `json:"question"`
 	Choices   []string `json:"choices"`
 }
@@ -95,7 +96,7 @@ func toPublic(c *Course, l Lesson) publicLesson {
 	}
 	return publicLesson{
 		ID: l.ID, Kind: l.Kind, Title: l.Title, File: l.File, Files: l.Files, Language: lang,
-		Code: l.Code, Highlight: l.Highlight, Context: l.Context, Question: l.Question, Choices: l.Choices,
+		Code: l.Code, Highlight: l.Highlight, Context: l.Context, Figure: l.Figure, Question: l.Question, Choices: l.Choices,
 	}
 }
 

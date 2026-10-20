@@ -72,6 +72,10 @@ Set by the user on 2026-10-16 ("left vs right ... one can always change the sele
 
 Codebase lessons ask about the architecture and carry no code. The first lesson of a group opens with a `context` paragraph in a soft panel (the map of that aspect, read before answering); then the question sits on the left under the title in larger text, the right column shows only the choices under "Pick one". When a lesson has code as evidence, the layout is the snippet layout (file path, code, question on the right). After a pick, the explanation is followed by a muted monospace line "See path, path" naming the files the fact rests on, so the learner can verify it.
 
+## Figures
+
+A lesson's `figure` (inline SVG from the server, our own content) renders in the left column between the context and the question, in a soft panel, scaled to the column width, colored by the page's CSS variables so it follows the theme.
+
 ## Hard presentation rules
 
 1. Choices are shown verbatim, one per line, no decoration beyond the number.

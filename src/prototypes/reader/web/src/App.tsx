@@ -291,6 +291,7 @@ function LessonView(props: {
         ) : (
           <>
             {lesson.context && <p className="context">{lesson.context}</p>}
+            {lesson.figure && <div className="figure" dangerouslySetInnerHTML={{ __html: lesson.figure }} />}
             <p className="prompt">{lesson.question}</p>
           </>
         )}

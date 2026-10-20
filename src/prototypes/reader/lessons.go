@@ -55,6 +55,7 @@ type Lesson struct {
 	Code        string   `json:"code,omitempty"`      // optional
 	Highlight   string   `json:"highlight,omitempty"` // a substring that occurs exactly once in Code, or empty
 	Context     string   `json:"context,omitempty"`   // exposition read before the question: the map of this aspect
+	Figure      string   `json:"figure,omitempty"`    // inline SVG illustration, shown between context and question
 	Question    string   `json:"question"`
 	Choices     []string `json:"choices"`
 	Answer      int      `json:"answer"`

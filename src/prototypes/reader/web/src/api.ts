@@ -31,6 +31,7 @@ export interface Lesson {
   code?: string; // optional: evidence for the question
   highlight?: string; // a substring of code, or absent
   context?: string; // exposition read before the question
+  figure?: string; // inline SVG illustration (our own content)
   question: string;
   choices: string[];
 }

@@ -217,6 +217,8 @@ h2 { margin: 0 0 20px; font-size: 26px; line-height: 1.25; }
 .course-tagline { color: var(--muted); }
 /* A lesson without code: the question is the content. */
 .context { font-size: 15px; line-height: 1.6; margin: 4px 0 18px; padding: 14px 16px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; max-width: 680px; }
+.figure { margin: 4px 0 18px; padding: 12px 14px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; max-width: 680px; }
+.figure svg { display: block; width: 100%; height: auto; font-family: inherit; }
 .prompt { font-size: 19px; line-height: 1.5; margin: 8px 0 16px; max-width: 640px; }
 .files { font-size: 12px; color: var(--muted); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; margin: 8px 0 0; }
 

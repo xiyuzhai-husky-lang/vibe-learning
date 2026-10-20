@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Lessons for the speculative decoding paper (arXiv 2211.17192). Run to regenerate lessons.json."""
-import hashlib, json, os, random
+import hashlib, json, os, random, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from figures import FIGURES
 
 L = []
 def lesson(id, kind, title, question, correct, wrong, explanation, refs, context=None):
@@ -261,6 +263,7 @@ for l in L:
     r = random.Random(int(hashlib.md5(l["id"].encode()).hexdigest(), 16)); r.shuffle(choices)
     d = {"id": l["id"], "kind": l["kind"], "title": l["title"]}
     if l["context"]: d["context"] = l["context"]
+    if l["id"] in FIGURES: d["figure"] = FIGURES[l["id"]]
     d.update(question=l["question"], files=l["refs"], choices=choices, answer=choices.index(l["correct"]), explanation=l["explanation"])
     out.append(d)
 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "lessons.json"), "w") as f:
