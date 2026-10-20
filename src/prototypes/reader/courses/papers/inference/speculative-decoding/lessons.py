@@ -6,6 +6,69 @@ L = []
 def lesson(id, kind, title, question, correct, wrong, explanation, refs, context=None):
     L.append(dict(id=id, kind=kind, title=title, question=question, correct=correct, wrong=wrong, explanation=explanation, refs=refs, context=context))
 
+
+# Definitions: the terms the course relies on, each using only earlier ones.
+lesson("def-autoregressive", "definitions", "Autoregressive decoding",
+  "What is autoregressive decoding?",
+  "One token at a time, each conditioned on the ones before it",
+  ["All tokens of the sequence at once, from the prompt alone", "Re-running the model on its output until it stops changing"],
+  "A language model gives a distribution over the next token given a prefix; decoding appends one sampled token and repeats, so the steps are inherently sequential.",
+  ["Section 1"])
+lesson("def-decode-step", "definitions", "A decode step",
+  "What is one decode step of a transformer?",
+  "One forward pass yielding the next-token distribution",
+  ["One layer of the model applied to the whole sequence", "One prompt token being written into the KV cache"],
+  "Each step runs the full model over the current position (with the cached prefix) and ends with a distribution from which one token is sampled.",
+  ["Section 1"])
+lesson("def-memory-bound", "definitions", "Memory-bound decoding",
+  "What is memory-bound decoding?",
+  "Steps whose time is set by reading the weights from memory",
+  ["Steps that stop because the KV cache has filled GPU memory", "Steps whose time is set by the arithmetic of the matmuls"],
+  "At small batch a step reads every weight once to do very little arithmetic per weight, so memory bandwidth, not compute, bounds its time; compute-bound is the opposite regime.",
+  ["Section 1", "Section 3.4"])
+lesson("def-compute-bound", "definitions", "Compute-bound decoding",
+  "What is compute-bound decoding?",
+  "Steps whose time is set by arithmetic, not by weight reads",
+  ["Steps that wait on the CPU to prepare the next batch", "Steps limited by how fast the sampler can draw tokens"],
+  "With a large batch the same weights serve many positions, the arithmetic per weight read grows, and the arithmetic units become the bottleneck.",
+  ["Section 3.4"])
+lesson("def-target-draft", "definitions", "Target and draft",
+  "In speculative decoding, what are the target and the draft?",
+  "The large model we want output from, and a cheap guesser",
+  ["Two copies of one model, one for prompts, one for answers", "The model being trained, and the model scoring its data"],
+  "The paper calls them Mp and Mq: the target defines the correct output distribution, the approximation model only proposes tokens for it to check.",
+  ["Section 2.1"])
+lesson("def-gamma", "definitions", "Gamma",
+  "What is gamma in speculative decoding?",
+  "How many tokens the draft guesses before the target checks them",
+  ["How many draft models are run in parallel against one target", "How many tokens the target emits per step without a draft"],
+  "Each iteration the draft runs gamma steps; the target then verifies those gamma guesses, plus the position after them, in one pass.",
+  ["Section 2.1"])
+lesson("def-acceptance-rate", "definitions", "Acceptance rate",
+  "What is the acceptance rate, alpha?",
+  "The probability that the target accepts one draft guess",
+  ["The fraction of the vocabulary the draft and target agree on", "The share of iterations in which every guess survives"],
+  "Alpha is the expected probability that a draft token passes the acceptance test; it depends on how close the draft's distribution is to the target's.",
+  ["Section 3.2"])
+lesson("def-cost-coefficient", "definitions", "Cost coefficient",
+  "What is the cost coefficient, c?",
+  "The time of one draft step as a fraction of one target step",
+  ["The number of draft parameters divided by target parameters", "The fraction of tokens that the draft gets wrong"],
+  "The paper measures draft cost in target-step units; c near zero means a nearly free draft, c near one a draft as slow as the target.",
+  ["Section 3.3"])
+lesson("def-exact", "definitions", "Exact (lossless) decoding",
+  "What does it mean that speculative decoding is exact?",
+  "Each output token has exactly the target's distribution",
+  ["The draft and the target always produce the same token", "The output text is identical to the small model's"],
+  "Nothing about quality is traded: a sequence decoded speculatively is distributed as if the target had decoded it alone, which is proved, not measured.",
+  ["Section 2.3", "Appendix A.1"])
+lesson("def-residual", "definitions", "The residual distribution",
+  "What is the residual distribution used when a guess is rejected?",
+  "Target minus draft probabilities, clipped at zero, renormalized",
+  ["The target's distribution with the rejected token removed", "The average of the target's and the draft's distributions"],
+  "Written norm(max(0, p - q)), it holds exactly the probability mass the target wanted that the draft did not propose.",
+  ["Section 2.3"])
+
 # The problem
 lesson("problem-one-token-per-pass", "problem", "One token per pass",
   "Why does a large model's decode step produce only one token, when the hardware could do far more arithmetic in that time?",

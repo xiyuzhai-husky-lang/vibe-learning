@@ -113,7 +113,7 @@ Set by the user on 2026-10-18 ("how about we learn splash of inco ai now") and c
 - Every lesson must pass "would a tech lead care?" A constant's value, a flag's name, a type's shape fail unless they are the system's rule (the 32-token page is the unit of cache sharing: that passes).
 - Never ask what a token is; ask what the system does, why, where.
 - Every fact is checked against the repository at the pinned commit; each lesson lists the `files` it rests on (repo-relative paths that must exist), so a reviewer can verify it.
-- Kinds are the seven groups above, in that order; 5 to 12 lessons each; a course of 40 to 70 lessons.
+- Kinds are `definitions` (see the paper rules: the terms the course relies on, one "What is X?" each, first) and then the seven groups above, in that order; 5 to 12 lessons each; a course of 40 to 70 lessons.
 - Guessable: more than 80% of good engineers who have never seen the repository, reasoning from the question and the system's purpose, pick right.
 - Choices stay within about 10 characters of each other and the correct one is never the longest; one lesson teaches one fact; everything in English.
 
@@ -121,7 +121,8 @@ Set by the user on 2026-10-18 ("how about we learn splash of inco ai now") and c
 
 Set by the user on 2026-10-20 ("we work on papers instead"; the catalog's top level is Languages, Papers, Codebases). A paper course teaches what a reader who understood the paper knows, by the same rules as codebase courses: no quoting the paper and asking what a sentence means; a map first, then why and what follows.
 
-- **Groups, in order:** `problem` (what was slow, wrong or impossible, and why), `idea` (the move the paper makes, in plain words), `why-it-works` (the argument or proof, as reasoning the learner can follow), `assumptions` (what it needs and what it costs), `results` (what was measured, how big, and the limits), `aftermath` (what the idea enabled and what replaced or refined it). 3 to 6 lessons each.
+- **Begin with definitions.** Set by the user on 2026-10-20 ("you can begin with questions of DEFINITIONS, what is memory-bound decoding??"). The first group of every paper or codebase course is `definitions`: one question per term the course relies on ("What is memory-bound decoding?", "What is the acceptance rate?"), three candidate definitions in plain words, one right; the wrong ones are definitions of neighbouring ideas a newcomer would confuse it with. A why-question may only use terms already defined. 6 to 12 terms, ordered so each definition uses only earlier ones.
+- **Groups, in order:** `definitions`, then `problem` (what was slow, wrong or impossible, and why), `idea` (the move the paper makes, in plain words), `why-it-works` (the argument or proof, as reasoning the learner can follow), `assumptions` (what it needs and what it costs), `results` (what was measured, how big, and the limits), `aftermath` (what the idea enabled and what replaced or refined it). 3 to 6 lessons each.
 - **The first lesson of each group carries a `context`**: 4-8 sentences stating that aspect as fact, written by us, not quoted. The questions reason from it.
 - **Questions ask why or what follows**: "Why is a single target pass over several draft tokens about as cheap as one token?", "What would break if a rejected token were replaced by a sample from the target alone?", "When does the method stop helping?". Never "what does Section 3 say" and never recall of a number unless the number is the point.
 - Wrong choices are reasons a smart reader would find plausible. Choices at most 64 characters, within about 10 of each other, correct never the longest. Explanation 1-2 sentences.

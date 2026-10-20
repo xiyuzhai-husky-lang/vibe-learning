@@ -12,6 +12,10 @@
   ],
   "kinds": [
     {
+      "id": "definitions",
+      "label": "Definitions"
+    },
+    {
       "id": "problem",
       "label": "The problem"
     },

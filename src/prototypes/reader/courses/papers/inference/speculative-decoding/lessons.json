@@ -1,5 +1,167 @@
 [
   {
+    "id": "def-autoregressive",
+    "kind": "definitions",
+    "title": "Autoregressive decoding",
+    "question": "What is autoregressive decoding?",
+    "files": [
+      "Section 1"
+    ],
+    "choices": [
+      "One token at a time, each conditioned on the ones before it",
+      "All tokens of the sequence at once, from the prompt alone",
+      "Re-running the model on its output until it stops changing"
+    ],
+    "answer": 0,
+    "explanation": "A language model gives a distribution over the next token given a prefix; decoding appends one sampled token and repeats, so the steps are inherently sequential."
+  },
+  {
+    "id": "def-decode-step",
+    "kind": "definitions",
+    "title": "A decode step",
+    "question": "What is one decode step of a transformer?",
+    "files": [
+      "Section 1"
+    ],
+    "choices": [
+      "One prompt token being written into the KV cache",
+      "One forward pass yielding the next-token distribution",
+      "One layer of the model applied to the whole sequence"
+    ],
+    "answer": 1,
+    "explanation": "Each step runs the full model over the current position (with the cached prefix) and ends with a distribution from which one token is sampled."
+  },
+  {
+    "id": "def-memory-bound",
+    "kind": "definitions",
+    "title": "Memory-bound decoding",
+    "question": "What is memory-bound decoding?",
+    "files": [
+      "Section 1",
+      "Section 3.4"
+    ],
+    "choices": [
+      "Steps that stop because the KV cache has filled GPU memory",
+      "Steps whose time is set by reading the weights from memory",
+      "Steps whose time is set by the arithmetic of the matmuls"
+    ],
+    "answer": 1,
+    "explanation": "At small batch a step reads every weight once to do very little arithmetic per weight, so memory bandwidth, not compute, bounds its time; compute-bound is the opposite regime."
+  },
+  {
+    "id": "def-compute-bound",
+    "kind": "definitions",
+    "title": "Compute-bound decoding",
+    "question": "What is compute-bound decoding?",
+    "files": [
+      "Section 3.4"
+    ],
+    "choices": [
+      "Steps limited by how fast the sampler can draw tokens",
+      "Steps that wait on the CPU to prepare the next batch",
+      "Steps whose time is set by arithmetic, not by weight reads"
+    ],
+    "answer": 2,
+    "explanation": "With a large batch the same weights serve many positions, the arithmetic per weight read grows, and the arithmetic units become the bottleneck."
+  },
+  {
+    "id": "def-target-draft",
+    "kind": "definitions",
+    "title": "Target and draft",
+    "question": "In speculative decoding, what are the target and the draft?",
+    "files": [
+      "Section 2.1"
+    ],
+    "choices": [
+      "The model being trained, and the model scoring its data",
+      "Two copies of one model, one for prompts, one for answers",
+      "The large model we want output from, and a cheap guesser"
+    ],
+    "answer": 2,
+    "explanation": "The paper calls them Mp and Mq: the target defines the correct output distribution, the approximation model only proposes tokens for it to check."
+  },
+  {
+    "id": "def-gamma",
+    "kind": "definitions",
+    "title": "Gamma",
+    "question": "What is gamma in speculative decoding?",
+    "files": [
+      "Section 2.1"
+    ],
+    "choices": [
+      "How many draft models are run in parallel against one target",
+      "How many tokens the target emits per step without a draft",
+      "How many tokens the draft guesses before the target checks them"
+    ],
+    "answer": 2,
+    "explanation": "Each iteration the draft runs gamma steps; the target then verifies those gamma guesses, plus the position after them, in one pass."
+  },
+  {
+    "id": "def-acceptance-rate",
+    "kind": "definitions",
+    "title": "Acceptance rate",
+    "question": "What is the acceptance rate, alpha?",
+    "files": [
+      "Section 3.2"
+    ],
+    "choices": [
+      "The share of iterations in which every guess survives",
+      "The fraction of the vocabulary the draft and target agree on",
+      "The probability that the target accepts one draft guess"
+    ],
+    "answer": 2,
+    "explanation": "Alpha is the expected probability that a draft token passes the acceptance test; it depends on how close the draft's distribution is to the target's."
+  },
+  {
+    "id": "def-cost-coefficient",
+    "kind": "definitions",
+    "title": "Cost coefficient",
+    "question": "What is the cost coefficient, c?",
+    "files": [
+      "Section 3.3"
+    ],
+    "choices": [
+      "The fraction of tokens that the draft gets wrong",
+      "The number of draft parameters divided by target parameters",
+      "The time of one draft step as a fraction of one target step"
+    ],
+    "answer": 2,
+    "explanation": "The paper measures draft cost in target-step units; c near zero means a nearly free draft, c near one a draft as slow as the target."
+  },
+  {
+    "id": "def-exact",
+    "kind": "definitions",
+    "title": "Exact (lossless) decoding",
+    "question": "What does it mean that speculative decoding is exact?",
+    "files": [
+      "Section 2.3",
+      "Appendix A.1"
+    ],
+    "choices": [
+      "The draft and the target always produce the same token",
+      "The output text is identical to the small model's",
+      "Each output token has exactly the target's distribution"
+    ],
+    "answer": 2,
+    "explanation": "Nothing about quality is traded: a sequence decoded speculatively is distributed as if the target had decoded it alone, which is proved, not measured."
+  },
+  {
+    "id": "def-residual",
+    "kind": "definitions",
+    "title": "The residual distribution",
+    "question": "What is the residual distribution used when a guess is rejected?",
+    "files": [
+      "Section 2.3"
+    ],
+    "choices": [
+      "The target's distribution with the rejected token removed",
+      "Target minus draft probabilities, clipped at zero, renormalized",
+      "The average of the target's and the draft's distributions"
+    ],
+    "answer": 1,
+    "explanation": "Written norm(max(0, p - q)), it holds exactly the probability mass the target wanted that the draft did not propose."
+  },
+  {
     "id": "problem-one-token-per-pass",
     "kind": "problem",
     "title": "One token per pass",

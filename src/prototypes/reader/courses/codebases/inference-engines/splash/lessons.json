@@ -1,5 +1,208 @@
 [
   {
+    "id": "def-prefill-decode",
+    "kind": "definitions",
+    "title": "Prefill and decode",
+    "question": "What are prefill and decode?",
+    "files": [
+      "DEVELOPMENT.md"
+    ],
+    "choices": [
+      "Loading the weights, then warming the GPU with a dummy run",
+      "Tokenizing the prompt, then detokenizing the model's output",
+      "Running the prompt through the model, then tokens one by one"
+    ],
+    "answer": 2,
+    "explanation": "Prefill processes the whole prompt in large chunks to build its cache; decode then runs a step per new token, which is the memory-bound phase speculative decoding speeds up."
+  },
+  {
+    "id": "def-kv-page",
+    "kind": "definitions",
+    "title": "KV page",
+    "question": "What is a KV page in Splash?",
+    "files": [
+      "runtime/engine/KvCache.hpp",
+      "runtime/ops/PagedKv.hpp"
+    ],
+    "choices": [
+      "One attention layer's keys and values for the whole prompt",
+      "A 16 KiB block of weights the attention kernels read",
+      "Keys and values of 32 consecutive tokens, the cache unit"
+    ],
+    "answer": 2,
+    "explanation": "Attention KV is stored in fixed 32-token pages that are allocated, shared, evicted and addressed as units; a prompt becomes a chain of pages."
+  },
+  {
+    "id": "def-prefix-cache",
+    "kind": "definitions",
+    "title": "Prefix cache",
+    "question": "What is the prefix cache?",
+    "files": [
+      "runtime/engine/Cache.cpp",
+      "runtime/engine/KvCache.hpp"
+    ],
+    "choices": [
+      "The tokenizer's cache of recently seen prompt strings and ids",
+      "Pages kept after a request so a same-start prompt skips prefill",
+      "A copy of each client's last prompt text, keyed by its API key"
+    ],
+    "answer": 1,
+    "explanation": "Pages are content-addressed by their exact tokens and parent page, so any later prompt that begins the same way finds and reuses them."
+  },
+  {
+    "id": "def-lane",
+    "kind": "definitions",
+    "title": "Lane",
+    "question": "What is a lane?",
+    "files": [
+      "runtime/model/StateLayout.hpp",
+      "runtime/engine/Scheduler.hpp"
+    ],
+    "choices": [
+      "One thread of the Python server handling one connection",
+      "A slot for one running request, with its own state buffers",
+      "One Metal command queue reserved for a single request"
+    ],
+    "answer": 1,
+    "explanation": "Attention KV lives in shared pages, but each running request also needs private buffers for its recurrent GDN state and draft context; the lane holds them and the batch is a few lanes wide."
+  },
+  {
+    "id": "def-recurrent-state",
+    "kind": "definitions",
+    "title": "Recurrent state",
+    "question": "What is a request's recurrent state?",
+    "files": [
+      "runtime/engine/Cache.hpp",
+      "runtime/model/QwenHybridLayout.hpp"
+    ],
+    "choices": [
+      "The KV pages of every attention layer up to that same point",
+      "The fixed-size memory of the GDN layers at a point in the prompt",
+      "The sampler's random seed and its repetition penalty counters"
+    ],
+    "answer": 1,
+    "explanation": "Both supported families are hybrids: most layers are gated delta net recurrences whose state is a fixed-size cell, not a growing KV; a resume needs that cell at the resume point."
+  },
+  {
+    "id": "def-restore-point",
+    "kind": "definitions",
+    "title": "Restore point",
+    "question": "What is a restore point?",
+    "files": [
+      "runtime/engine/Cache.hpp",
+      "runtime/engine/StateCache.cpp"
+    ],
+    "choices": [
+      "The last token before the model's context limit is reached",
+      "The byte offset in the SSD file where a page was written",
+      "A cached recurrent state at a page where a later request resumes"
+    ],
+    "answer": 2,
+    "explanation": "Matched KV alone cannot be resumed from in a hybrid model, so the cache keeps composite states at chosen pages; a follow-up turn resumes from the deepest one on its chain."
+  },
+  {
+    "id": "def-admission",
+    "kind": "definitions",
+    "title": "Admission",
+    "question": "What is admission in the engine?",
+    "files": [
+      "runtime/engine/Engine.cpp",
+      "runtime/engine/Scheduler.cpp"
+    ],
+    "choices": [
+      "Deciding whether a waiting request may start, given the memory",
+      "Checking the client's API key before a request is accepted",
+      "Choosing which lane's tokens are streamed to the client first"
+    ],
+    "answer": 0,
+    "explanation": "Between GPU commands the scheduler admits waiting requests in order, giving each a lane and the memory its prompt needs, or refusing and holding the line behind it."
+  },
+  {
+    "id": "def-frame",
+    "kind": "definitions",
+    "title": "Frame",
+    "question": "What is a frame in the server-engine protocol?",
+    "files": [
+      "runtime/engine/Protocol.hpp",
+      "server/protocol.py"
+    ],
+    "choices": [
+      "One 32-token page of KV sent between the two processes",
+      "One HTTP chunk of the server's streaming response body",
+      "One typed binary message on the engine's stdin or stdout"
+    ],
+    "answer": 2,
+    "explanation": "The Python server and the C++ engine exchange length-prefixed frames (requests and masks in, Ready, Start, Tokens and Done events out); nothing else crosses between them."
+  },
+  {
+    "id": "def-draft",
+    "kind": "definitions",
+    "title": "Draft (DFlash)",
+    "question": "What is the draft in Splash?",
+    "files": [
+      "runtime/model/DFlashDraft.hpp",
+      "runtime/metal/abi/ExecutionGeometry.h"
+    ],
+    "choices": [
+      "A quantized copy of the target used when memory runs short",
+      "A small model proposing tokens the target verifies all at once",
+      "A cache of the model's most frequent next tokens per prompt"
+    ],
+    "answer": 1,
+    "explanation": "DFlash reads the target's captured hidden states and proposes seven tokens per cycle; the target verifies all of them in one pass and keeps the accepted prefix, which is speculative decoding."
+  },
+  {
+    "id": "def-mask",
+    "kind": "definitions",
+    "title": "Token mask",
+    "question": "What is a token mask?",
+    "files": [
+      "server/constraints.py",
+      "runtime/engine/Protocol.hpp"
+    ],
+    "choices": [
+      "A list of tokens the client asked the model never to produce",
+      "A bitmask over the vocabulary: which tokens the grammar allows",
+      "The attention mask that hides padding positions in a batch"
+    ],
+    "answer": 1,
+    "explanation": "For constrained output the server compiles a grammar and answers the engine's mask requests with one allowed-token bitmask per position, which the sampler applies."
+  },
+  {
+    "id": "def-extent",
+    "kind": "definitions",
+    "title": "Extent",
+    "question": "What is an extent?",
+    "files": [
+      "runtime/engine/KvPool.cpp",
+      "runtime/metal/kernels/common/kv_extent.h"
+    ],
+    "choices": [
+      "A large Metal buffer of many KV pages, allocated as a unit",
+      "The region of a weight image that one layer's kernels read",
+      "One page's worth of KV written out to the SSD tier file"
+    ],
+    "answer": 0,
+    "explanation": "The pool grows and shrinks by extents of about 128 MiB; page table entries point into them, so kernels reach any page by address without binding buffers."
+  },
+  {
+    "id": "def-ssd-tier",
+    "kind": "definitions",
+    "title": "SSD tier",
+    "question": "What is the SSD tier?",
+    "files": [
+      "runtime/engine/KvPageTier.cpp",
+      "runtime/engine/WriteBehind.cpp"
+    ],
+    "choices": [
+      "A copy of the model weights kept on disk for faster restarts",
+      "The directory where the server logs every request it serves",
+      "Disk that takes evicted cache states and pages, not dropping"
+    ],
+    "answer": 2,
+    "explanation": "When memory reclaim evicts a restore point and the KV it needs, the IO worker writes them to the cache file so a later prompt can restore them rather than recompute."
+  },
+  {
     "id": "map-two-processes",
     "kind": "map",
     "title": "Two processes",

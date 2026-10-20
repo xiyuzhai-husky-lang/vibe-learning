@@ -6,14 +6,45 @@
   "source": "https://github.com/incoai/splash",
   "commit": "be3b083",
   "commit_date": "2026-10-14",
-  "related": ["cpp", "python", "metal", "mlx", "llama-cpp"],
+  "related": [
+    "cpp",
+    "python",
+    "metal",
+    "mlx",
+    "llama-cpp"
+  ],
   "kinds": [
-    {"id": "map", "label": "Map"},
-    {"id": "boundaries", "label": "Boundaries"},
-    {"id": "flows", "label": "Flows"},
-    {"id": "state", "label": "State and memory"},
-    {"id": "invariants", "label": "Invariants"},
-    {"id": "failure", "label": "Failure and operations"},
-    {"id": "change", "label": "Where to change what"}
+    {
+      "id": "definitions",
+      "label": "Definitions"
+    },
+    {
+      "id": "map",
+      "label": "Map"
+    },
+    {
+      "id": "boundaries",
+      "label": "Boundaries"
+    },
+    {
+      "id": "flows",
+      "label": "Flows"
+    },
+    {
+      "id": "state",
+      "label": "State and memory"
+    },
+    {
+      "id": "invariants",
+      "label": "Invariants"
+    },
+    {
+      "id": "failure",
+      "label": "Failure and operations"
+    },
+    {
+      "id": "change",
+      "label": "Where to change what"
+    }
   ]
 }
