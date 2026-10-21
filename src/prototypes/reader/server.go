@@ -59,14 +59,15 @@ type publicLesson struct {
 }
 
 type courseResponse struct {
-	ID      string         `json:"id"`
-	Title   string         `json:"title"`
-	Tagline string         `json:"tagline"`
-	Source  string         `json:"source,omitempty"`
-	Path    []Kind         `json:"path"`    // categories from the root down: the breadcrumb
-	Related []publicCourse `json:"related"` // see also
-	Kinds   []Kind         `json:"kinds"`
-	Lessons []publicLesson `json:"lessons"`
+	ID       string         `json:"id"`
+	Title    string         `json:"title"`
+	Tagline  string         `json:"tagline"`
+	Source   string         `json:"source,omitempty"`
+	Path     []Kind         `json:"path"`     // categories from the root down: the breadcrumb
+	Related  []publicCourse `json:"related"`  // see also
+	Readings []Reading      `json:"readings"` // read before the lessons
+	Kinds    []Kind         `json:"kinds"`
+	Lessons  []publicLesson `json:"lessons"`
 }
 
 // progressResponse restores what the learner already did in a course. The explanation is
@@ -117,7 +118,7 @@ func serve(addr, webDir, dataDir string) {
 			return
 		}
 		resp := courseResponse{ID: c.ID, Title: c.Title, Tagline: c.Tagline, Source: c.Source, Kinds: c.Kinds,
-			Path: []Kind{}, Related: []publicCourse{}, Lessons: []publicLesson{}}
+			Path: []Kind{}, Related: []publicCourse{}, Readings: c.Readings, Lessons: []publicLesson{}}
 		for _, cat := range c.Path[1:] { // skip the unnamed root
 			resp.Path = append(resp.Path, Kind{ID: cat.ID, Label: cat.Label})
 		}

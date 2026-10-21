@@ -129,6 +129,16 @@ Set by the user on 2026-10-20 ("we work on papers instead"; the catalog's top le
 - `files` holds the references the fact rests on, as section, theorem, figure or equation numbers of the paper ("Section 3.2", "Theorem 3"), so a learner can check; `course.json` names the paper and its arXiv or DOI link in `source`.
 - Every fact checked against the paper itself. Everything in English.
 
+## Readings before the exercises
+
+Set by the user on 2026-10-21 ("make a good site explaining this, let that be part of the course; this should be like reading materials before the exercises"). The exercises test a judgment; the reading is where the judgment comes from. A course may carry `readings/`: Markdown files `NN-slug.md`, each one mechanism explained in our own words, shown before the lessons.
+
+- **One reading, one mechanism**, with a title that states the claim ("Why the output is exactly the target's"), not a topic. A paper course usually has one reading per load-bearing idea; the definitions group may draw on them.
+- **Shape of a reading:** the setting in a few sentences; the mechanism stated plainly; a worked numeric example small enough to check by hand (a four-token vocabulary, two distributions); the argument, step by step, with every equality justified in words; what the guarantee does not cover; one closing remark that places the idea (what it is a special case of, what later work kept). 600 to 1500 words.
+- **Figures** by the same rules as lesson figures: `@figure name` on its own line is replaced by `readings/name.svg`, drawn by the course's `readings.py` with `tools/svg.py`, CSS-variable colors. A reading's figures may show everything, including what a why-question later asks: the reading teaches, the lesson tests.
+- **Math** in KaTeX, `$...$` inline and `$$...$$` displayed, used where a formula is shorter than the sentence; otherwise words.
+- Written by us from understanding, never a paraphrase of the paper's text; facts checked against the paper. No headings deeper than `##`. English.
+
 ## Illustrations where they apply
 
 Set by the user on 2026-10-20 ("shouldn't be all text. Consider showing graphical illustrations in places that apply"). A lesson may carry a `figure`: inline SVG shown between the context and the question. Use one wherever the fact is a structure, a flow or a quantity: a definition of a structure (a page chain, two processes and a pipe), a step sequence (draft, verify, accept), a relation between quantities (step time against batch size, tokens per iteration against gamma). Pure facts of ownership or reasons stay text. Rules: SVG only, drawn by a generator (`tools/svg.py` helpers), colors from the page's CSS variables (`var(--ink)`, `var(--muted)`, `var(--accent)`, `var(--ok)`, `var(--bad)`, `var(--panel-2)`) so both themes work, at most one figure per lesson, 560 wide, legible labels, no decoration. The same figure may serve several lessons. A figure may illustrate the term of a definition question (that is its job); on a why-question it must not show or caption the answer, so detach it from such lessons rather than weaken it.

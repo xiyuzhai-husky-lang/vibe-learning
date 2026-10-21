@@ -21,13 +21,13 @@ def step_bars():
     f = Fig(560, 170, "Where a decode step's time goes at small and large batch")
     def row(y, label, read, arith):
         f.text(20, y + 14, label, size=12, anchor="start", weight=600)
-        f.text(110, y + 14, "reading weights", size=11, anchor="end", fill=MUTED)
-        f.rect(120, y + 2, read, 16, fill=ACCENT, stroke="none", rx=3)
-        f.text(110, y + 40, "arithmetic", size=11, anchor="end", fill=MUTED)
-        f.rect(120, y + 28, arith, 16, fill=OK, stroke="none", rx=3)
-    row(30, "batch 1", 400, 8)
-    row(100, "batch 64", 400, 380)
-    f.text(120, 162, "time per step, same weights read once in both cases", size=11, anchor="start", fill=MUTED)
+        f.text(190, y + 14, "reading weights", size=11, anchor="end", fill=MUTED)
+        f.rect(200, y + 2, read, 16, fill=ACCENT, stroke="none", rx=3)
+        f.text(190, y + 40, "arithmetic", size=11, anchor="end", fill=MUTED)
+        f.rect(200, y + 28, arith, 16, fill=OK, stroke="none", rx=3)
+    row(30, "batch 1", 340, 7)
+    row(100, "batch 64", 340, 323)
+    f.text(200, 162, "time per step, same weights read once in both cases", size=11, anchor="start", fill=MUTED)
     return f.render()
 
 def roofline():

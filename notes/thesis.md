@@ -71,6 +71,10 @@ Whatever a learner does (answers, first-try results) is stored locally, in a git
 
 A paper is learned like a codebase (2026-10-20): the map of the idea first, then questions that ask why it works, what it assumes and costs, and what followed. Not reading the paper's sentences and guessing what they mean. The catalog's top level is Languages, Papers, Codebases.
 
+## Readings come before the exercises
+
+A question tests a judgment, but the judgment has to come from somewhere (2026-10-21). For a language that somewhere is the snippet itself: the feature is guessable from the code. For a paper or a codebase it is not: nobody can judge why speculative decoding preserves the output distribution without having seen the argument. So such a course opens with readings, our own explanation of each load-bearing mechanism, with figures and a worked example, and the exercises then check that the reader took the argument in rather than the words. The reading is still reading, not writing: the learner judges whether they follow, and the exercises tell them.
+
 ## Everything in English
 
 Everything in the repo, lessons, UI, notes, skills and code comments, is written in English.

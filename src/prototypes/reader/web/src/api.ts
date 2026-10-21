@@ -36,6 +36,13 @@ export interface Lesson {
   choices: string[];
 }
 
+// One mechanism explained before the exercises: Markdown with inline SVG figures and $math$.
+export interface Reading {
+  id: string;
+  title: string;
+  body: string;
+}
+
 export interface Course {
   id: string;
   title: string;
@@ -43,6 +50,7 @@ export interface Course {
   source?: string;
   path: Kind[]; // categories from the root down: the breadcrumb
   related: CourseSummary[]; // see also
+  readings: Reading[]; // read first
   kinds: Kind[];
   lessons: Lesson[];
 }

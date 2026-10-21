@@ -13,11 +13,11 @@ The official Tour of Go makes users write code. We give choices: read, judge. It
 
 Rejected on the way for languages: pairing games, translation picking, syntax/trap/convention reviews (checkers, provers and AI make them trivial), checking code against a ticket (CNL will make intent mechanical).
 
-Lesson rules live in `llm-agent/skills/tutorial-generation`.
+A paper or codebase course opens with readings: our explanation of each mechanism, read before the lessons (see thesis). Lesson and reading rules live in `llm-agent/skills/tutorial-generation`.
 
 ## The catalog is an encyclopedia
 
-A tree with tons of entries, most empty until needed, connected by see-also links. The directory tree under `courses/` is the catalog: a directory with `course.json` is an entry, any other directory is a category with `category.json`. `lessons.json` is optional. `related` names the entries to see next. To add an entry, make the directory; to fill one, write its lessons by the skill and add its tree-sitter grammar.
+A tree with tons of entries, most empty until needed, connected by see-also links. The directory tree under `courses/` is the catalog: a directory with `course.json` is an entry, any other directory is a category with `category.json`. `lessons.json` and `readings/` are optional. `related` names the entries to see next. To add an entry, make the directory; to fill one, write its lessons by the skill and add its tree-sitter grammar.
 
 ## The entrance
 

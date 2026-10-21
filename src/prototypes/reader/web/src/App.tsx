@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
+import { Markdown } from "./Markdown";
 import {
   fetchCatalog, fetchCourse, fetchProgress, resetProgress, submitChoice,
-  type Category, type Course, type Lesson,
+  type Category, type Course, type Lesson, type Reading,
 } from "./api";
 import { CodeBlock } from "./CodeBlock";
 import { countCourses } from "./Catalog";
@@ -100,6 +101,7 @@ function CourseView({ id, onHome, onOpen }: { id: string; onHome: () => void; on
   const [course, setCourse] = useState<Course | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [index, setIndex] = useState(0);
+  const [reading, setReading] = useState<number | null>(null); // index into course.readings, or the lessons
   const [progress, setProgress] = useState<Record<string, Progress>>({});
   const [busy, setBusy] = useState(false);
 
@@ -112,10 +114,16 @@ function CourseView({ id, onHome, onOpen }: { id: string; onHome: () => void; on
         }
         setProgress(restored);
         // ?lesson=<id> opens one lesson; otherwise resume at the first lesson not yet solved.
-        const wanted = new URLSearchParams(window.location.search).get("lesson");
+        const params = new URLSearchParams(window.location.search);
+        const wanted = params.get("lesson");
         const at = wanted ? c.lessons.findIndex((l) => l.id === wanted) : -1;
         const first = c.lessons.findIndex((l) => !restored[l.id]?.solved);
         setIndex(at >= 0 ? at : first < 0 ? c.lessons.length : first);
+        // Readings come first: ?reading=<id> opens one, and a fresh learner starts at the first.
+        const wantedReading = params.get("reading");
+        const r = wantedReading ? c.readings.findIndex((x) => x.id === wantedReading) : -1;
+        const fresh = Object.keys(restored).length === 0 && at < 0;
+        setReading(r >= 0 ? r : fresh && c.readings.length > 0 ? 0 : null);
         setCourse(c);
       })
       .catch((e) => setError(String(e)));
@@ -126,10 +134,11 @@ function CourseView({ id, onHome, onOpen }: { id: string; onHome: () => void; on
       await resetProgress(id);
       setProgress({});
       setIndex(0);
+      setReading(course && course.readings.length > 0 ? 0 : null);
     } catch (e) {
       setError(String(e));
     }
-  }, [id]);
+  }, [id, course]);
 
   const lessons = course?.lessons;
   const lesson = lessons?.[index];
@@ -190,7 +199,7 @@ function CourseView({ id, onHome, onOpen }: { id: string; onHome: () => void; on
     </>
   );
 
-  if (lessons.length === 0) {
+  if (lessons.length === 0 && course.readings.length === 0) {
     return (
       <main className="shell home">
         {header}
@@ -204,6 +213,21 @@ function CourseView({ id, onHome, onOpen }: { id: string; onHome: () => void; on
     <div className="layout">
       <aside className="sidebar">
         {header}
+        {course.readings.length > 0 && (
+          <section className="toc-group">
+            <h2 className="toc-kind">Read first</h2>
+            <ol className="toc">
+              {course.readings.map((r, i) => (
+                <li key={r.id} className={`toc-item ${reading === i ? "now" : ""}`}>
+                  <button onClick={() => setReading(i)}>
+                    <span className="dot" />
+                    {r.title}
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
         {course.kinds.map((kind) => {
           const group = lessons.map((l, i) => [l, i] as const).filter(([l]) => l.kind === kind.id);
           if (group.length === 0) return null;
@@ -213,10 +237,10 @@ function CourseView({ id, onHome, onOpen }: { id: string; onHome: () => void; on
               <ol className="toc">
                 {group.map(([l, i]) => {
                   const p = progress[l.id];
-                  const state = p?.solved ? (firstTry(p) ? "ok" : "bad") : i === index ? "now" : "";
+                  const state = p?.solved ? (firstTry(p) ? "ok" : "bad") : i === index && reading === null ? "now" : "";
                   return (
                     <li key={l.id} className={`toc-item ${state}`}>
-                      <button onClick={() => setIndex(i)}>
+                      <button onClick={() => { setReading(null); setIndex(i); }}>
                         <span className="dot" />
                         {l.title}
                       </button>
@@ -234,7 +258,16 @@ function CourseView({ id, onHome, onOpen }: { id: string; onHome: () => void; on
       </aside>
 
       <main className="shell">
-        {finished || !lesson ? (
+        {reading !== null ? (
+          <ReadingView
+            key={course.readings[reading].id}
+            reading={course.readings[reading]}
+            n={reading + 1}
+            total={course.readings.length}
+            next={reading + 1 < course.readings.length ? course.readings[reading + 1].title : lessons.length > 0 ? null : undefined}
+            onNext={() => setReading(reading + 1 < course.readings.length ? reading + 1 : null)}
+          />
+        ) : finished || !lesson ? (
           <Summary lessons={lessons} progress={progress} onRestart={restart} />
         ) : (
           <LessonView
@@ -326,6 +359,24 @@ function LessonView(props: {
           })}
         </ol>
       </div>
+    </article>
+  );
+}
+
+// One reading: prose with figures and math, then one button on to the next reading or the exercises.
+function ReadingView(props: { reading: Reading; n: number; total: number; next: string | null | undefined; onNext: () => void }) {
+  const { reading, n, total, next, onNext } = props;
+  useEffect(() => { window.scrollTo(0, 0); }, [reading.id]);
+  return (
+    <article className="reading">
+      <p className="eyebrow">Reading {n} of {total}</p>
+      <h2>{reading.title}</h2>
+      <Markdown source={reading.body} />
+      {next !== undefined && (
+        <p className="reading-next">
+          <button className="next" onClick={onNext}>{next === null ? "Start the exercises" : `Next: ${next}`}</button>
+        </p>
+      )}
     </article>
   );
 }

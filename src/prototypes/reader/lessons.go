@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"log"
 	"path"
+	"regexp"
 	"sort"
 	"strings"
 )
@@ -24,8 +25,17 @@ type Course struct {
 	Related  []string `json:"related"`          // ids of courses to see next
 	Kinds    []Kind   `json:"kinds"`            // feature groups or subsystems, in display order
 
-	Lessons []Lesson    `json:"-"`
-	Path    []*Category `json:"-"` // categories from the root down to this course's parent
+	Readings []Reading   `json:"-"` // explanations read before the lessons, in order
+	Lessons  []Lesson    `json:"-"`
+	Path     []*Category `json:"-"` // categories from the root down to this course's parent
+}
+
+// A Reading is one mechanism explained in our own words, read before the exercises: Markdown
+// from readings/NN-slug.md with "@figure name" lines replaced by the inline SVG readings/name.svg.
+type Reading struct {
+	ID    string `json:"id"`
+	Title string `json:"title"`
+	Body  string `json:"body"` // Markdown with inline SVG; math in $...$ and $$...$$
 }
 
 type Kind struct {
@@ -135,8 +145,50 @@ func loadCourse(dir, name string) *Course {
 	if exists(path.Join(dir, "lessons.json")) {
 		mustReadJSON(path.Join(dir, "lessons.json"), &c.Lessons)
 	}
+	c.Readings = loadReadings(path.Join(dir, "readings"))
 	validate(c)
 	return c
+}
+
+var figureLine = regexp.MustCompile(`(?m)^@figure ([a-z0-9-]+)$`)
+
+func loadReadings(dir string) []Reading {
+	out := []Reading{}
+	if !exists(dir) {
+		return out
+	}
+	entries, err := fs.ReadDir(coursesFS, dir)
+	if err != nil {
+		log.Fatalf("read %s: %v", dir, err)
+	}
+	for _, e := range entries { // ReadDir sorts by name, so the NN- prefix orders the readings
+		name := e.Name()
+		if !strings.HasSuffix(name, ".md") {
+			continue
+		}
+		b, err := coursesFS.ReadFile(path.Join(dir, name))
+		if err != nil {
+			log.Fatalf("read %s: %v", name, err)
+		}
+		body := string(b)
+		title, rest, ok := strings.Cut(strings.TrimSpace(body), "\n")
+		if !ok || !strings.HasPrefix(title, "# ") {
+			log.Fatalf("%s/%s: a reading starts with a # title line", dir, name)
+		}
+		rest = figureLine.ReplaceAllStringFunc(rest, func(m string) string {
+			svg, err := coursesFS.ReadFile(path.Join(dir, figureLine.FindStringSubmatch(m)[1]+".svg"))
+			if err != nil {
+				log.Fatalf("%s/%s: %v", dir, name, err)
+			}
+			return "<figure class=\"figure\">" + strings.TrimSpace(string(svg)) + "</figure>"
+		})
+		id := strings.TrimSuffix(name, ".md")
+		if i := strings.Index(id, "-"); i > 0 && strings.Trim(id[:i], "0123456789") == "" {
+			id = id[i+1:]
+		}
+		out = append(out, Reading{ID: id, Title: strings.TrimPrefix(title, "# "), Body: strings.TrimSpace(rest)})
+	}
+	return out
 }
 
 func exists(name string) bool {
