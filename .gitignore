@@ -41,3 +41,4 @@ src/prototypes/*/web/dist/
 
 # Local user data (progress); never committed
 .local/
+__pycache__/
