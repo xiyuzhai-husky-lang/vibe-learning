@@ -39,7 +39,7 @@ def roofline():
     f.line(ox, oy - 60, ox + W - 10, oy - 60, stroke=ACCENT, sw=2)
     f.text(ox + 8, oy - 66, "reading the weights: flat", size=11, anchor="start", fill=ACCENT)
     f.path(f"M{ox},{oy-4} L{ox + W - 10},{oy - 126}", stroke=OK, sw=2)
-    f.text(ox + W - 14, oy - 118, "arithmetic: grows", size=11, anchor="end", fill=OK)
+    f.text(ox + W - 14, oy - 96, "arithmetic: grows", size=11, anchor="end", fill=OK)
     cx = ox + 215
     f.line(cx, oy, cx, oy - 130, stroke=MUTED, sw=1, dash="4 3")
     f.text(cx - 8, oy - 136, "memory-bound", size=11, anchor="end", fill=MUTED)

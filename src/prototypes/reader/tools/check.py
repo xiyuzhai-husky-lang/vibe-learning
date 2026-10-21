@@ -2,7 +2,7 @@
 """Check every lessons.json in the catalog against the lesson rules the Go loader does not enforce:
 three choices of at most 64 characters within 10 of each other, the correct one never the longest,
 an explanation of one or two sentences, a context of at most 8 sentences, English only.
-Also checks every readings/*.md: a # title line, every @figure present as an SVG, 300 to 2000 words, English only."""
+Also checks every readings/*.md: a # title line, every @figure present as an SVG, 300 to 4000 words (LaTeX counted), English only."""
 import glob, json, os, re, sys
 
 root = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "courses")
@@ -28,7 +28,7 @@ for path in sorted(glob.glob(os.path.join(root, "**", "readings", "*.md"), recur
     for fig in re.findall(r"^@figure ([a-z0-9-]+)$", text, re.M):
         if not os.path.exists(os.path.join(os.path.dirname(path), fig + ".svg")): bad(f"figure {fig}.svg missing")
     words = len(re.findall(r"[A-Za-z]+", text))
-    if not 300 <= words <= 2000: bad(f"{words} words, expected 300 to 2000")
+    if not 300 <= words <= 4000: bad(f"{words} words, expected 300 to 4000")
     if re.search(r"[一-鿿]", text): bad("non-English text")
     if re.search(r"^#{3,} ", text, re.M): bad("heading deeper than ##")
 if errors:

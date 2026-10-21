@@ -74,7 +74,7 @@ Codebase lessons ask about the architecture and carry no code. The first lesson 
 
 ## Readings
 
-A course's readings come first (2026-10-21, "reading materials before the exercises"). The sidebar lists them above the lesson groups under "Read first"; a reading opens by default when the learner has no progress in the course, otherwise the course resumes at the next lesson; `?reading=<id>` deep-links one. A reading renders as a single column of prose, max width about 680px, Markdown via `marked`, math via KaTeX, figures inline in the same soft panel as lesson figures. It ends with one button: the next reading, or "Start the exercises". A read reading is not tracked; nothing is graded there.
+A course's readings come first (2026-10-21, "reading materials before the exercises"). The sidebar lists them above the lesson groups under "Read first"; a reading opens by default when the learner has no progress in the course, otherwise the course resumes at the next lesson; `?reading=<id>` deep-links one. A reading renders as a single column of prose that uses the page: max width about 960px at 17px type, figures and tables up to that width (user, 2026-10-21: "your current layout is leaving much blank space"; never a narrow column with a third of the page empty), Markdown via `marked`, math via KaTeX, figures inline in the same soft panel as lesson figures. It ends with one button: the next reading, or "Start the exercises". A reading has no interaction (2026-10-21, "THIS IS ONLY READING"): prose, math and static figures. Theorem-style paragraphs (bold label, statement, italic Proof, ∎) are plain Markdown. A read reading is not tracked; nothing is graded there.
 
 ## Figures
 

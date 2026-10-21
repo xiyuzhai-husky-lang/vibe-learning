@@ -1,12 +1,16 @@
 # Why the output is exactly the target's
 
-Speculative decoding runs a cheap draft model ahead of the large target model and lets the target check several guesses in one pass. The claim that makes the method worth using is strong: the tokens that come out have exactly the distribution the target would have produced on its own. Not approximately, and not only when the draft is good. This reading shows why, one position at a time, with numbers small enough to check by hand.
+Speculative decoding lets a cheap draft model guess several tokens ahead and lets the large target model check all of them in one pass. The claim that makes the method worth using is strong: the tokens that come out have exactly the distribution the target would have produced on its own, whatever the draft is. This reading proves that claim, first for one position, then for each position of a multi-token iteration, then for the whole generation, and finally shows that the acceptance rate it achieves is the best any exact scheme can have.
 
-## The setting
+## Setting and notation
 
-Fix a prefix. The target model gives a distribution $p$ over the next token; the draft gives $q$. Both are lists of numbers, one per vocabulary entry, summing to one. We can afford to compute $q$ many times and $p$ rarely, and we want samples from $p$.
+Let $V$ be the finite vocabulary and fix a prefix $s$. The target defines a distribution $p(\cdot) = p(\cdot \mid s)$ on $V$ and the draft defines $q(\cdot) = q(\cdot \mid s)$. For a real number $a$ write $a^+ = \max(a, 0)$. Define
 
-Take a vocabulary of four tokens.
+$$\beta \;=\; \sum_{x \in V} \min\big(p(x),\, q(x)\big), \qquad r(x) \;=\; \frac{\big(p(x) - q(x)\big)^+}{\sum_{y \in V} \big(p(y) - q(y)\big)^+}.$$
+
+$\beta$ will turn out to be the probability that a draft guess is accepted at this position. The quantity $(p(x) - q(x))^+$ is the mass the draft owes the target at $x$, the owed mass, and $r$, the residual distribution, is the owed mass scaled to sum to one; it is what replaces a rejected guess. $r$ is defined when its denominator is positive, which Lemma 2 shows is exactly the case $\beta < 1$; when $\beta = 1$ no rejection ever occurs and $r$ is not needed. The paper writes $\alpha$ for the expectation of $\beta$ over prefixes; the lessons call $\alpha$ the acceptance rate.
+
+A running example with four tokens:
 
 | token | $p$, the target | $q$, the draft |
 |---|---|---|
@@ -17,80 +21,138 @@ Take a vocabulary of four tokens.
 
 @figure two-distributions
 
-The draft is a reasonable guesser: it likes the same tokens the target likes. But it over-claims b and d and under-claims a and c.
+Here $\beta = 0.30 + 0.30 + 0.10 + 0.05 = 0.75$, the owed masses $(p - q)^+$ are $0.20, 0, 0.05, 0$, and $r = (0.8, 0, 0.2, 0)$.
 
-## The rule
+## The procedure at one position
 
-1. Sample a guess $x$ from the draft: $x \sim q$.
-2. Compute $p$. The target has to do this pass anyway; the point is that it can do it for several positions at once.
-3. Keep $x$ with probability $\min\!\left(1, \dfrac{p(x)}{q(x)}\right)$.
-4. If $x$ is rejected, emit instead a sample from the residual distribution $r = \mathrm{norm}\big(\max(0,\, p - q)\big)$: the part of $p$ the draft under-claimed, scaled up to sum to one.
+1. Draw a guess $x \sim q$.
+2. Draw $u$ uniformly from $[0, 1]$. If $u < \min\!\left(1, \dfrac{p(x)}{q(x)}\right)$, accept: the output is $x$.
+3. Otherwise reject: the output is a fresh draw $y \sim r$.
+
+Step 2 never divides by zero, because $x$ was drawn from $q$, so $q(x) > 0$. The three draws $x$, $u$ and $y$ are independent.
 
 @figure one-position
 
-In the example: a guess of a is always kept, since $p(a) \ge q(a)$. A guess of b survives with probability $0.3 / 0.5 = 0.6$. c is always kept. d survives with probability $0.05 / 0.10 = 0.5$.
+In the example, a is always accepted since $p(a) \ge q(a)$; b is accepted with probability $0.30 / 0.50 = 0.6$; c always; d with probability $0.05 / 0.10 = 0.5$.
 
-## Where the probability goes
+## One position
 
-Look at one token $x$ and ask how often it comes out of the keep step. It is proposed with probability $q(x)$ and then kept with probability $\min(1, p(x)/q(x))$. Multiply:
+**Lemma 1 (kept mass).** For every $x \in V$,
+$$\Pr[\text{accept and output } x] \;=\; \min\big(p(x), q(x)\big).$$
 
-$$q(x) \cdot \min\!\left(1, \frac{p(x)}{q(x)}\right) = \min\big(q(x),\, p(x)\big).$$
+*Proof.* If $q(x) = 0$ the token is never drawn and both sides are $0$. Otherwise the event is the intersection of $\{x \text{ is drawn}\}$ and $\{u < \min(1, p(x)/q(x))\}$; the two draws are independent, so the probability is the product
+$$q(x) \cdot \min\!\left(1, \frac{p(x)}{q(x)}\right).$$
+If $q(x) \le p(x)$ the minimum is $1$ and the product is $q(x) = \min(p(x), q(x))$. If $q(x) > p(x)$ the minimum is $p(x)/q(x)$ and the product is $p(x) = \min(p(x), q(x))$. ∎
 
-So the keep step emits each token at the rate $\min(p, q)$. Wherever the draft over-claims, the token is cut down to the target's rate; wherever it under-claims, the draft's full rate is kept because it is already below the target's. In the example the kept rates are 0.30, 0.30, 0.10 and 0.05.
+**Lemma 2 (the accepted and the owed mass add to one).** $\Pr[\text{accept}] = \beta$, and
+$$\sum_{x \in V} \big(p(x) - q(x)\big)^+ \;=\; 1 - \beta.$$
+In particular $r$ is a probability distribution whenever $\beta < 1$, and $\beta = 1$ exactly when $p = q$.
+
+*Proof.* Summing Lemma 1 over $x$ gives $\Pr[\text{accept}] = \beta$. For the identity, take any $x$. If $q(x) \le p(x)$ then $\min(p(x), q(x)) = q(x)$ and $(p(x) - q(x))^+ = p(x) - q(x)$; if $q(x) > p(x)$ then $\min(p(x), q(x)) = p(x)$ and $(p(x) - q(x))^+ = 0$. In both cases
+$$\min\big(p(x), q(x)\big) + \big(p(x) - q(x)\big)^+ \;=\; p(x).$$
+Summing over $V$ and using $\sum_x p(x) = 1$ gives $\beta + \sum_x (p(x) - q(x))^+ = 1$. The denominator of $r$ is therefore $1 - \beta$, positive when $\beta < 1$, and $r$ is nonnegative and sums to one. Finally $\beta = 1$ means $(p - q)^+ = 0$ everywhere, that is $p \le q$ pointwise; since both sum to one this forces $p = q$; conversely $p = q$ gives $\beta = \sum_x p(x) = 1$. ∎
 
 @figure overlap
 
-The kept rates sum to 0.75, so a guess is accepted 75 percent of the time. That is the acceptance rate $\alpha$ at this position. The remaining 25 percent is the rejection case.
+**Theorem 1 (one position is exact).** Let $X$ be the output of the procedure. Then for every $x \in V$ and every draft distribution $q$,
+$$\Pr[X = x] \;=\; p(x).$$
 
-What is missing from $p$ after the keep step? For each token, $p(x) - \min(p(x), q(x)) = \max(0,\, p(x) - q(x))$: 0.20 for a, nothing for b, 0.05 for c, nothing for d. These sum to 0.25, the same number as the rejection probability.
+*Proof.* The two branches are exclusive, so
+$$\Pr[X = x] \;=\; \Pr[\text{accept and } X = x] \;+\; \Pr[\text{reject and } X = x].$$
+The first term is $\min(p(x), q(x))$ by Lemma 1. If $\beta = 1$ then $p = q$ by Lemma 2, rejection never happens, and the first term is already $p(x)$. Otherwise $\Pr[\text{reject}] = 1 - \beta > 0$ by Lemma 2, and on rejection $X$ is the draw $y \sim r$, independent of $(x, u)$, so the second term is $(1 - \beta)\, r(x)$. Hence
+$$\begin{aligned}
+\Pr[X = x] \;&=\; \min\big(p(x), q(x)\big) + (1 - \beta) \cdot \frac{\big(p(x) - q(x)\big)^+}{1 - \beta} \\
+&=\; \min\big(p(x), q(x)\big) + \big(p(x) - q(x)\big)^+ \;=\; p(x),
+\end{aligned}$$
+the last step being the pointwise identity from the proof of Lemma 2. ∎
 
-That is not a coincidence. For every token, $\min(p, q) + \max(0, p - q) = p$: if $q \le p$ the two terms are $q$ and $p - q$, and if $q > p$ they are $p$ and $0$. Summing over the vocabulary,
+The proof used nothing about $q$ beyond its being a distribution. A bigram table, a tiny model or a model of the wrong language all give the exact output; they differ in $\beta$ and hence in speed.
 
-$$\sum_x \min(p, q) \;+\; \sum_x \max(0,\, p - q) \;=\; \sum_x p \;=\; 1,$$
+Checking the example against the theorem:
 
-so the rejection probability $1 - \alpha$ equals the total mass still owed, and the residual, which is that owed mass divided by $1 - \alpha$, is exactly the distribution of what the keep step failed to deliver.
-
-## Adding it up
-
-$$\Pr[\text{output} = x] \;=\; \underbrace{\min(p(x), q(x))}_{\text{kept}} \;+\; \underbrace{(1 - \alpha)\cdot\frac{\max(0,\, p(x) - q(x))}{1 - \alpha}}_{\text{rejected, then resampled}} \;=\; p(x).$$
-
-Check it with the numbers.
-
-| token | kept | resampled | total | $p$ |
+| token | accepted, $\min(p, q)$ | rejected then redrawn, $(1 - \beta)\, r$ | total | $p$ |
 |---|---|---|---|---|
-| a | 0.30 | 0.25 × 0.80 = 0.20 | 0.50 | 0.50 |
+| a | 0.30 | 0.25 × 0.8 = 0.20 | 0.50 | 0.50 |
 | b | 0.50 × 0.6 = 0.30 | 0 | 0.30 | 0.30 |
-| c | 0.10 | 0.25 × 0.20 = 0.05 | 0.15 | 0.15 |
+| c | 0.10 | 0.25 × 0.2 = 0.05 | 0.15 | 0.15 |
 | d | 0.10 × 0.5 = 0.05 | 0 | 0.05 | 0.05 |
 
-The last two columns agree. Nothing in the argument used what $q$ is or where it came from. A bigram table, a tiny model, a model trained on the wrong language: the identity holds for any $q$. What $q$ changes is $\alpha$, how often the cheap guess survives, and therefore the speed. Never the output.
+**Proposition 1 (no other replacement works).** Suppose $\beta < 1$ and that on rejection the output is drawn from some distribution $r'$ instead of $r$. Then the output has law $\min(p, q) + (1 - \beta)\, r'$, and its error at $x$ is
+$$\Pr[X = x] - p(x) \;=\; (1 - \beta)\big(r'(x) - r(x)\big).$$
+So the output is exact if and only if $r' = r$.
 
-## Why the residual, and not simply $p$
+*Proof.* Theorem 1's decomposition $\Pr[X = x] = \min(p(x), q(x)) + (1 - \beta)\, r(x)$ holds with $r'$ in place of $r$, since it used only that the replacement is drawn independently from the given distribution; subtracting $p(x) = \min(p(x), q(x)) + (1 - \beta)\, r(x)$ gives the error. ∎
 
-Suppose that on rejection we sampled from $p$ itself. Token a would come out with probability $0.30 + 0.25 \times 0.50 = 0.425$ instead of 0.50, and token b with $0.30 + 0.25 \times 0.30 = 0.375$ instead of 0.30. The keep step had already delivered b at its full target rate, so any further b is too much; a was still short by 0.20 and received only 0.125. Sampling from $p$ counts the overlap a second time. The residual is $p$ with the overlap removed, which is precisely what is still owed. Any other replacement rule either over-delivers the draft's favourites or under-delivers the target's.
+The natural mistake is $r' = p$. In the example it outputs a with probability $0.30 + 0.25 \times 0.50 = 0.425$ instead of $0.50$ and b with probability $0.30 + 0.25 \times 0.30 = 0.375$ instead of $0.30$. In general the output is then
+$$\min(p, q) + (1 - \beta)\, p \;=\; \min(p, q) + (1 - \beta) \min(p, q) + (1 - \beta)\, (p - q)^+ :$$
+the overlap is delivered once by acceptance and then a further $1 - \beta$ of it again inside $p$, while the owed mass $(p - q)^+$, which lives exactly where the target outweighs the draft, is scaled down to $1 - \beta$ of itself. Every token the draft overrates gains, by $(1 - \beta)\, p(x)$. A token the target overrates moves by $(1 - \beta)\, p(x) - (p(x) - q(x))$, a loss exactly when $q(x) / p(x) < \beta$. The changes sum to zero, so the losses, which can fall only on tokens the target overrates, pay for all the gains.
 
-## From one position to a sequence
+**Proposition 2 (greedy decoding).** If $p$ is a point mass at $x^*$ (temperature zero), then at that position the procedure outputs $x^*$ with probability one; it accepts the guess exactly when $x = x^*$, so $\beta = q(x^*)$.
 
-The draft produces $\gamma$ guesses in a row, each conditioned on the guesses before it. The target runs one pass over all of them and reports $p$ at every position. Now apply the rule from left to right.
+*Proof.* $\min(1, p(x)/q(x))$ is $0$ for $x \ne x^*$ and $1$ for $x = x^*$, so the guess is accepted if and only if it is $x^*$, and $\beta = \sum_x \min(p, q) = q(x^*)$. If $q(x^*) < 1$ the residual is $(p - q)^+ / (1 - \beta)$, which is $(1 - q(x^*)) / (1 - q(x^*)) = 1$ at $x^*$ and $0$ elsewhere, so a rejection also outputs $x^*$; if $q(x^*) = 1$ the guess is always $x^*$ and always accepted. ∎
 
-Position 1 is the single-position case: the emitted token has distribution $p_1$. If the guess was kept, the guess at position 2 was drafted conditioned on exactly the prefix that now exists, and $p_2$ was computed for that same prefix, so the rule applies again. Continue until the first rejection. There the residual sample is the emitted token, and every later guess is thrown away: each was conditioned on a token that did not happen, so it is a sample from the wrong distribution and tells us nothing.
+So with greedy decoding the method reproduces the target's greedy output token for token, and the acceptance probability at that position is the probability that the draft's sample coincides with the target's argmax.
 
-If all $\gamma$ guesses are kept, the target's pass has also produced $p_{\gamma + 1}$ for the position after the last guess, and one more token is sampled from it directly. That bonus token is a plain target sample, which is why an iteration can yield $\gamma + 1$ tokens.
+## A whole sequence from one target pass
+
+Now the draft runs $\gamma$ steps ahead. Write $x_{<i}$ for $(x_1, \dots, x_{i-1})$. The draft draws
+$$x_1 \sim q(\cdot \mid s), \quad x_2 \sim q(\cdot \mid s, x_1), \quad \dots, \quad x_\gamma \sim q(\cdot \mid s, x_{<\gamma}),$$
+and the target computes, in a single pass over the $\gamma + 1$ positions,
+$$p_i(\cdot) \;=\; p(\cdot \mid s, x_{<i}) \qquad \text{for } i = 1, \dots, \gamma + 1.$$
+Write $q_i(\cdot) = q(\cdot \mid s, x_{<i})$, let $\beta_i$ and $r_i$ be the quantities of the previous section for the pair $(p_i, q_i)$, and let $u_1, \dots, u_\gamma$ be uniforms, independent of each other and of the draft's draws.
+
+The iteration goes left to right. For $i = 1, \dots, \gamma$: if $u_i < \min(1, p_i(x_i)/q_i(x_i))$, emit $x_i$ and continue; otherwise emit a fresh draw from $r_i$, independent of everything drawn so far, and stop, discarding $x_{i+1}, \dots, x_\gamma$. If all $\gamma$ guesses were emitted, emit one more token drawn from $p_{\gamma + 1}$ and stop. Let $n$ be the number of tokens emitted, so $1 \le n \le \gamma + 1$, and let $Y_1, \dots, Y_n$ be the emitted tokens.
 
 @figure sequence
 
-Every emitted token is therefore drawn from the target's distribution given the tokens actually emitted before it. That is the definition of sampling a sequence from the target. The guarantee holds for every $\gamma$; $\gamma$ only trades draft cost against how many tokens an iteration tends to yield.
+**Theorem 2 (each position is exact given its prefix).** For every $k$ with $1 \le k \le \gamma + 1$ and every $y_1, \dots, y_k \in V$ for which the conditioning event has positive probability, that is, $p(y_i \mid s, y_{<i}) > 0$ and $q(y_i \mid s, y_{<i}) > 0$ for all $i < k$,
+$$\Pr\big[Y_k = y_k \;\big|\; n \ge k,\; Y_{<k} = y_{<k}\big] \;=\; p(y_k \mid s, y_{<k}).$$
+More precisely, let $G$ be any event of positive probability on which $n \ge k$ and $Y_{<k} = y_{<k}$, determined by $(x_{<k}, u_{<k})$ together with random variables independent of this iteration's draws. Then conditional on $G$, $Y_k$ has law $p(\cdot \mid s, y_{<k})$. The displayed statement is the case $G = \{n \ge k, Y_{<k} = y_{<k}\}$, whose probability $\prod_{i < k} \min(p(y_i \mid s, y_{<i}),\, q(y_i \mid s, y_{<i}))$ is positive under the stated condition.
 
-## Greedy decoding
+*Proof.* First let $k \le \gamma$. On $G$ the first $k - 1$ guesses were accepted and equal $y_{<k}$, so $p_k = p(\cdot \mid s, y_{<k})$ and $q_k = q(\cdot \mid s, y_{<k})$ are fixed distributions. Conditional on $x_{<k} = y_{<k}$, the guess $x_k$ has law $q_k$, by construction of the draft. $G$ is otherwise determined by $u_{<k}$ and by variables independent of $(x_k, u_k)$ and of the residual draw, and the uniforms are independent of the draft's draws, so conditioning on $G$ leaves the law of $x_k$ and the independence of $u_k$ and the residual draw unchanged. The $k$-th emitted token is therefore produced from $(x_k, u_k)$ and, on rejection, a fresh draw from $r_k$, by exactly the one-position procedure for the pair $(p_k, q_k)$, and Theorem 1 gives the claim.
 
-At temperature zero, $p$ puts all its mass on one token. The rule keeps the guess exactly when it is that token, and the residual on rejection is the target's argmax. The output is the target's greedy output, token for token, and $\alpha$ is the fraction of positions where the two models' argmaxes coincide.
+For $k = \gamma + 1$, on $G$ all $\gamma$ guesses were accepted and equal $y_{\le \gamma}$, and $Y_{\gamma + 1}$ is by construction a fresh draw from $p_{\gamma + 1} = p(\cdot \mid s, y_{\le \gamma})$, independent of $G$. ∎
 
-## What the guarantee does not cover
+Theorem 2 does not say that the joint law of $(Y_1, \dots, Y_n)$ within one iteration is the target's. Conditioning on $n \ge k$ selects runs whose first $k - 1$ guesses were accepted, and for instance $\Pr[Y_1 = y \mid n \ge 2] = \min(p_1(y), q_1(y)) / \beta_1$, not $p_1(y)$: the stopping rule biases the prefix toward the overlap. What is exact is each token given its prefix, and that is all the next result needs, because the generation does not stop at a rejection: the next iteration continues from the same prefix.
 
-- **Numerics.** The target computes $p$ for $\gamma + 1$ positions in one batched pass instead of one at a time. Kernels take different paths at different batch sizes, so logits can differ in their last bits. This is the same effect as changing the batch size on an ordinary server, not a property of the method.
-- **Lossy variants.** Later methods sometimes relax step 3 to raise $\alpha$: keep any guess the target finds typical enough, or any guess in its top $k$. Those change the distribution by design. The rule above is the exact one, and it is what the original paper proves.
-- **Bugs.** Resampling from $p$ instead of the residual, or keeping guesses after a rejection, breaks the identity in the ways shown above, and the output drifts toward the draft.
+**Corollary 1 (the whole generation is exact).** Run iterations back to back, each starting from the prefix emitted so far, and write $Z_1, Z_2, \dots$ for the tokens of the whole run. Then for every $m$ and every $y_1, \dots, y_m$,
+$$\Pr[Z_1 = y_1, \dots, Z_m = y_m] \;=\; \prod_{k = 1}^{m} p(y_k \mid s, y_{<k}),$$
+which is the probability the target alone assigns to $y_1 \dots y_m$.
 
-## Where this comes from
+*Proof.* By induction on $m$; for $m = 0$ both sides are $1$. Let $m \ge 1$ and suppose the claim holds for $m - 1$. If $\Pr[Z_{<m} = y_{<m}] = 0$ then the right side is zero by the induction hypothesis and the left side is at most $\Pr[Z_{<m} = y_{<m}] = 0$. Otherwise let $H$ be the history visible after $Z_{m-1}$ is emitted: all randomness of the completed iterations and, of the iteration in progress, only the guesses and uniforms already examined. The guesses of the iteration in progress that have not yet been examined were drawn at its start, but they are deliberately excluded from $H$. The randomness of an iteration depends on the completed ones only through its starting prefix, so the completed iterations are independent of its draws.
 
-The keep step is a maximal coupling of $p$ and $q$. The overlap $\sum_x \min(p, q)$ equals $1 - \mathrm{TV}(p, q)$, the largest probability with which a sample from $q$ and a sample from $p$ can be made to agree, so the acceptance rate is the highest any exact scheme could reach with this draft. Underneath, the method is rejection sampling pointed at a new goal: produce the expensive model's sample mostly out of the cheap model's.
+Take any event $G$ of positive probability determined by $H$ on which $Z_{<m} = y_{<m}$. $G$ fixes whether $Z_m$ is the first token of a fresh iteration or the $j$-th token of the one in progress. In the first case the fresh iteration starts from the prefix $s, y_{<m}$ with draws independent of $G$, and Theorem 2 at position $1$ gives $\Pr[Z_m = y_m \mid G] = p(y_m \mid s, y_{<m})$. In the second case the iteration started from the prefix $s, y_{<m-j+1}$, its first $j - 1$ guesses were accepted and equal $y_{m-j+1}, \dots, y_{m-1}$, and $G$ is determined by $(x_{<j}, u_{<j})$ of that iteration together with the completed iterations, which are independent of its draws; the strengthened form of Theorem 2 at position $j$ gives the same value. So the conditional probability of $\{Z_m = y_m\}$ given $H$ equals the constant $p(y_m \mid s, y_{<m})$ on the event $\{Z_{<m} = y_{<m}\}$, which is determined by $H$; hence $\Pr[Z_m = y_m \mid Z_{<m} = y_{<m}] = p(y_m \mid s, y_{<m})$, and multiplying by the induction hypothesis gives the claim for $m$. ∎
+
+The discarded guesses matter here. A guess $x_{i+1}$ drafted after a rejected $x_i$ was drawn from $q(\cdot \mid s, x_{\le i})$, conditioned on a token that was not emitted; keeping it would condition the output on a prefix that does not exist.
+
+## Why the acceptance rate cannot be higher
+
+**Proposition 3 (the acceptance probability is maximal).** Let $(X, Y)$ be any pair of random variables with $X \sim q$ and $Y \sim p$, jointly distributed in any way. Then
+$$\Pr[X = Y] \;\le\; \sum_{x \in V} \min\big(p(x), q(x)\big) \;=\; \beta,$$
+and the procedure of this reading attains equality: its output equals the draft's guess with probability exactly $\beta$.
+
+*Proof.* $\Pr[X = Y] = \sum_x \Pr[X = x, Y = x]$, and each term is at most both $\Pr[X = x] = q(x)$ and $\Pr[Y = x] = p(x)$, hence at most $\min(p(x), q(x))$. For the equality, take $X$ to be the draft's guess and $Y$ the procedure's output; $Y \sim p$ by Theorem 1. $Y = X$ on acceptance, which has probability $\beta$ by Lemma 2, so $\Pr[Y = X] \ge \beta$, and the inequality just proved gives $\Pr[Y = X] \le \beta$. (In fact $Y = X$ only on acceptance: a rejected $x$ has $q(x) > p(x)$, so $r(x) = 0$ and the redraw never returns it.) ∎
+
+Read this as a limit on every exact scheme. Any method whose guess is drawn from $q$ and that keeps it more often than $\beta$ outputs a $Y$ with $\Pr[Y = X] > \beta$, so by Proposition 3 the law of $Y$ is not $p$. The quantity $1 - \beta$ is the total variation distance between $p$ and $q$: Lemma 2 applied with the roles of $p$ and $q$ swapped gives $\sum_x (q(x) - p(x))^+ = 1 - \beta$ as well, and $|p - q| = (p - q)^+ + (q - p)^+$, so $\sum_x |p(x) - q(x)| = 2(1 - \beta)$. The acceptance probability of an exact scheme is therefore at most one minus the distance between the two models at that position.
+
+## How many tokens one iteration yields
+
+**Proposition 4 (expected tokens per iteration).** Suppose the acceptance events at the $\gamma$ positions of an iteration are independent, each with probability $\alpha$. Then
+$$\mathbb{E}[n] \;=\; \sum_{k = 0}^{\gamma} \alpha^k \;=\; \frac{1 - \alpha^{\gamma + 1}}{1 - \alpha} \qquad (\alpha < 1),$$
+and $\mathbb{E}[n] = \gamma + 1$ when $\alpha = 1$.
+
+*Proof.* The iteration emits one token no matter what, plus one further token for each $k = 1, \dots, \gamma$ such that the first $k$ guesses are all accepted: if the first $k$ guesses are accepted then at least $k + 1$ tokens are emitted, the $k$ guesses and either the residual draw at position $k + 1$ or the bonus token. So $n = 1 + \sum_{k = 1}^{\gamma} \mathbf{1}[\text{first } k \text{ accepted}]$, and by independence $\mathbb{E}[n] = 1 + \sum_{k = 1}^{\gamma} \alpha^k$, a geometric sum. ∎
+
+The independence is a modelling assumption, since in truth $\beta_i$ depends on the prefix; the paper uses it to estimate the speedup, which is $\mathbb{E}[n]$ divided by the cost of an iteration in units of one target pass. The exactness results above do not depend on it.
+
+## What the theorems do not say
+
+- **Numerics.** Theorem 2 assumes the $p_i$ from the batched pass equal the $p_i$ the target would compute one position at a time. In floating point they differ in the last bits because kernels take different paths at different shapes: verifying $\gamma + 1$ positions in one pass is a different matrix shape from one position at a time. This is the same discrepancy as changing the batch size on an ordinary server, not a property of the method.
+- **Relaxed acceptance.** Methods that keep a guess whenever the target finds it typical enough, or whenever it lies in the target's top $k$, change step 2. By Proposition 3 any rule that accepts more often than $\beta$ changes the output law; such methods trade exactness for speed knowingly.
+- **Implementation.** Drawing the replacement from $p$ instead of $r$ (Proposition 1) or keeping guesses after a rejection (the remark after Corollary 1) each break the identity in a computable way.
+
+## Where this sits
+
+A pair $(X, Y)$ with $X \sim q$ and $Y \sim p$ is called a coupling of $q$ and $p$, and one attaining $\Pr[X = Y] = \sum_x \min(p, q)$ is a maximal coupling. Theorem 1 and Proposition 3 together say the accept-or-resample rule is a maximal coupling of the draft with the target, built one token at a time.
+
+The construction is not classical rejection sampling, though it looks like it. Rejection sampling accepts $x \sim q$ with probability $p(x) / (C q(x))$ for the envelope constant $C = \max_x p(x) / q(x)$ and retries on rejection. With that acceptance rule, falling back to a draw from $p$ is exact, but the acceptance probability is $\sum_x q(x) \cdot p(x) / (C q(x)) = 1 / C = \min_x q(x) / p(x)$, which is at most $\beta$ since $p(x) / C \le \min(p(x), q(x))$ for every $x$, and it is zero as soon as the draft gives probability zero to any token the target allows (the paper's Appendix A.2 makes the first point). Speculative sampling instead accepts with probability $\min(1, p(x) / q(x))$, needs no $C$, never retries, and reaches the maximal $\beta$ precisely because the residual $r$ absorbs what the larger acceptance would otherwise double-count (Proposition 1).

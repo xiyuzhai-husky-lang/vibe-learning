@@ -1,36 +1,26 @@
 import { useMemo } from "react";
-import { marked, type TokenizerAndRendererExtension } from "marked";
+import { marked } from "marked";
 import katex from "katex";
 import "katex/dist/katex.min.css";
 
 // Readings are our own Markdown, served with inline SVG figures already in place.
-// Math is written as $...$ and $$...$$ and typeset by KaTeX.
+// Math is written as $...$ and $$...$$ and typeset by KaTeX. The math is lifted out before
+// Markdown runs, so that asterisks and underscores inside formulas are never read as emphasis.
 
-const blockMath: TokenizerAndRendererExtension = {
-  name: "blockMath",
-  level: "block",
-  start: (src) => src.indexOf("$$"),
-  tokenizer(src) {
-    const m = /^\$\$([\s\S]+?)\$\$/.exec(src);
-    if (m) return { type: "blockMath", raw: m[0], text: m[1].trim() };
-  },
-  renderer: (token) => `<p class="math">${katex.renderToString(token.text as string, { displayMode: true, throwOnError: false })}</p>`,
-};
-
-const inlineMath: TokenizerAndRendererExtension = {
-  name: "inlineMath",
-  level: "inline",
-  start: (src) => src.indexOf("$"),
-  tokenizer(src) {
-    const m = /^\$([^$\n]+?)\$/.exec(src);
-    if (m) return { type: "inlineMath", raw: m[0], text: m[1] };
-  },
-  renderer: (token) => katex.renderToString(token.text as string, { throwOnError: false }),
-};
-
-marked.use({ extensions: [blockMath, inlineMath] });
+function render(source: string): string {
+  const math: string[] = [];
+  const keep = (tex: string, display: boolean) => {
+    math.push(katex.renderToString(tex, { displayMode: display, throwOnError: false }));
+    return `MATHSPAN${math.length - 1}X`;
+  };
+  const lifted = source
+    .replace(/\$\$([\s\S]+?)\$\$/g, (_, tex: string) => `\n\n${keep(tex.trim(), true)}\n\n`)
+    .replace(/\$([^$\n]+?)\$/g, (_, tex: string) => keep(tex, false));
+  const html = marked.parse(lifted, { async: false }) as string;
+  return html.replace(/MATHSPAN(\d+)X/g, (_, i: string) => math[Number(i)]);
+}
 
 export function Markdown({ source }: { source: string }) {
-  const html = useMemo(() => marked.parse(source, { async: false }) as string, [source]);
+  const html = useMemo(() => render(source), [source]);
   return <div className="prose" dangerouslySetInnerHTML={{ __html: html }} />;
 }
